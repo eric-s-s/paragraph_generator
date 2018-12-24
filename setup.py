@@ -6,7 +6,7 @@ def readme():
         return f.read()
 
 
-setup(name='sentences',
+setup(name='paragraph_generator',
       version='4.0',
       description='sentence generator',
       long_description=readme(),
@@ -22,9 +22,9 @@ setup(name='sentences',
         'Programming Language :: Python',
         'Programming Language :: Python :: 3',
       ],
-      packages=find_packages(include=['sentences.*', 'sentences']),
+      packages=find_packages(include=['paragraph_generator.*', 'paragraph_generator']),
       entry_points={
-          'console_scripts': ['gen_pdf = sentences.guimain:main_app'],
+          'console_scripts': ['gen_pdf = paragraph_generator.guimain:main_app'],
       },
       package_data={
           '': ['data/*.csv', 'data/default.cfg', 'data/*.txt', 'data/*.ico']

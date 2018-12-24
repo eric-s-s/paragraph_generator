@@ -2,14 +2,14 @@ import unittest
 from random import seed
 import os
 
-from sentences.paragraphsgenerator import ParagraphsGenerator
+from paragraph_generator.paragraphsgenerator import ParagraphsGenerator
 
-from sentences import COUNTABLE_NOUNS_CSV, UNCOUNTABLE_NOUNS_CSV, PROPER_NOUNS_CSV, VERBS_CSV
-from sentences.backend.loader import verbs, uncountable_nouns, countable_nouns, proper_nouns
-from sentences.words.pronoun import Pronoun, CapitalPronoun
-from sentences.words.noun import Noun
-from sentences.words.verb import Verb
-from sentences.words.punctuation import Punctuation
+from paragraph_generator import COUNTABLE_NOUNS_CSV, UNCOUNTABLE_NOUNS_CSV, PROPER_NOUNS_CSV, VERBS_CSV
+from paragraph_generator.backend.loader import verbs, uncountable_nouns, countable_nouns, proper_nouns
+from paragraph_generator.words.pronoun import Pronoun, CapitalPronoun
+from paragraph_generator.words.noun import Noun
+from paragraph_generator.words.verb import Verb
+from paragraph_generator.words.punctuation import Punctuation
 
 from tests import TESTS_FILES
 

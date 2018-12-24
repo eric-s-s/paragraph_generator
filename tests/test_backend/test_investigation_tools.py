@@ -1,13 +1,13 @@
 import unittest
 from typing import List, Any
 
-from sentences.backend.investigation_tools import (requires_third_person, is_third_person, find_subject,
-                                                   get_present_be_verb)
-from sentences.words.basicword import BasicWord
-from sentences.words.noun import Noun
-from sentences.words.pronoun import Pronoun, CapitalPronoun
-from sentences.words.punctuation import Punctuation
-from sentences.words.verb import Verb
+from paragraph_generator.backend.investigation_tools import (requires_third_person, is_third_person, find_subject,
+                                                             get_present_be_verb)
+from paragraph_generator.words.basicword import BasicWord
+from paragraph_generator.words.noun import Noun
+from paragraph_generator.words.pronoun import Pronoun, CapitalPronoun
+from paragraph_generator.words.punctuation import Punctuation
+from paragraph_generator.words.verb import Verb
 
 i, me, you, he, him, she, her, it, we, us, they, them = Pronoun.__members__.values()
 period = Punctuation.PERIOD

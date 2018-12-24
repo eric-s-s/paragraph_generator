@@ -1,7 +1,7 @@
 import unittest
 
-from sentences.tags.status_tag import StatusTag
-from sentences.tags.tags import Tags
+from paragraph_generator.tags.status_tag import StatusTag
+from paragraph_generator.tags.tags import Tags
 
 
 class TestStatusTag(unittest.TestCase):

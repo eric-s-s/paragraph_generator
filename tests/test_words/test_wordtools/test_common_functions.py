@@ -1,7 +1,7 @@
 import unittest
 
-from sentences.words.wordtools.common_functions import (bold, add_s, add_ed, needs_es, is_y_as_long_vowel_sound,
-                                                        ends_with_short_vowel_and_consonant)
+from paragraph_generator.words.wordtools.common_functions import (bold, add_s, add_ed, needs_es, is_y_as_long_vowel_sound,
+                                                                  ends_with_short_vowel_and_consonant)
 
 
 class TestCommonFunctions(unittest.TestCase):

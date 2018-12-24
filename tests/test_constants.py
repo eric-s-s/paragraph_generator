@@ -1,7 +1,7 @@
 import unittest
 import os
 
-from sentences import DATA_PATH, APP_NAME, DEFAULT_CONFIG, COUNTABLE_NOUNS_CSV, UNCOUNTABLE_NOUNS_CSV, VERBS_CSV
+from paragraph_generator import DATA_PATH, APP_NAME, DEFAULT_CONFIG, COUNTABLE_NOUNS_CSV, UNCOUNTABLE_NOUNS_CSV, VERBS_CSV
 
 
 class TestConstants(unittest.TestCase):
@@ -19,7 +19,7 @@ VERBS_CSV = 'verbs.csv'
         self.assertEqual(APP_NAME, 'sentence_mangler')
 
     def test_DATA_PATH(self):
-        sentences_root = os.path.dirname(__file__).replace('tests', 'sentences')
+        sentences_root = os.path.dirname(__file__).replace('tests', 'paragraph_generator')
         self.assertEqual(DATA_PATH, os.path.join(sentences_root, 'data'))
 
     def test_DEFAULT_CONFIG(self):

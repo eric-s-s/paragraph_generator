@@ -1,9 +1,9 @@
 import unittest
 
-from sentences.words.verb import Verb
-from sentences.tags.tags import Tags
-from sentences.tags.wordtag import WordTag
-from sentences.words.basicword import BasicWord
+from paragraph_generator.words.verb import Verb
+from paragraph_generator.tags.tags import Tags
+from paragraph_generator.tags.wordtag import WordTag
+from paragraph_generator.words.basicword import BasicWord
 
 
 class TestNewVerb(unittest.TestCase):

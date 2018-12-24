@@ -1,14 +1,14 @@
 import random
 import unittest
 
-from sentences.backend.random_assignments.random_paragraph import RandomParagraph
+from paragraph_generator.backend.random_assignments.random_paragraph import RandomParagraph
 
-from sentences.word_groups.sentence import Sentence
-from sentences.words.pronoun import Pronoun
-from sentences.words.punctuation import Punctuation
-from sentences.words.noun import Noun
-from sentences.words.verb import Verb
-from sentences.words.basicword import BasicWord
+from paragraph_generator.word_groups.sentence import Sentence
+from paragraph_generator.words.pronoun import Pronoun
+from paragraph_generator.words.punctuation import Punctuation
+from paragraph_generator.words.noun import Noun
+from paragraph_generator.words.verb import Verb
+from paragraph_generator.words.basicword import BasicWord
 
 PERIOD = Punctuation.PERIOD
 EXCLAMATION = Punctuation.EXCLAMATION

@@ -1,11 +1,11 @@
 import unittest
 
-from sentences.backend.wordconnector import connect_words, flatten_paragraph, convert_paragraph, is_punctuation
-from sentences.words.pronoun import Pronoun
-from sentences.words.punctuation import Punctuation
-from sentences.words.noun import Noun
-from sentences.words.verb import Verb
-from sentences.words.basicword import BasicWord
+from paragraph_generator.backend.wordconnector import connect_words, flatten_paragraph, convert_paragraph, is_punctuation
+from paragraph_generator.words.pronoun import Pronoun
+from paragraph_generator.words.punctuation import Punctuation
+from paragraph_generator.words.noun import Noun
+from paragraph_generator.words.verb import Verb
+from paragraph_generator.words.basicword import BasicWord
 
 
 class TestWordConnector(unittest.TestCase):
@@ -51,7 +51,7 @@ class TestWordConnector(unittest.TestCase):
         bold_punctuation = [p.bold() for p in Punctuation]
         other = [BasicWord('.'), Pronoun.I, Pronoun.I.bold(), Noun('.'), Noun('hi').bold(),
                  Verb('.'), Verb('play').bold()]
-        false_positive = BasicWord('.').bold()
+        false_bold = BasicWord('.').bold()
 
         for word in punctuation:
             self.assertTrue(is_punctuation(word))
@@ -60,4 +60,4 @@ class TestWordConnector(unittest.TestCase):
         for word in other:
             self.assertFalse(is_punctuation(word))
 
-        self.assertTrue(is_punctuation(false_positive))
+        self.assertFalse(is_punctuation(false_bold))

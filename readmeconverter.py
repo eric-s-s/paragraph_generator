@@ -1,6 +1,6 @@
 import re
 import os
-from sentences import DATA_PATH
+from paragraph_generator import DATA_PATH
 
 
 def upper_repl(match):
@@ -28,7 +28,7 @@ def repl_intro(match):
 
 
 def replace_intro(text):
-    readme_start = r"(sentences v\d+\.\d+\s+==============).+(?=GUI options details:)"
+    readme_start = r"(paragraph_generator v\d+\.\d+\s+==============).+(?=GUI options details:)"
     return re.sub(readme_start, repl_intro, text, flags=re.DOTALL)
 
 

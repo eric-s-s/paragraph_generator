@@ -1,5 +1,9 @@
-sentences v3.3
-==============
+paragraph_generator v1.0
+========================
+
+
+THIS IS SOMEWHAT INVALID README. WORK IN PROGRESS
+-------------------------------------------------
 
 This module creates randomly generated paragraphs and then assigns specific kinds of errors to those paragraphs.
 It outputs this text to a pdf file. To install and run:

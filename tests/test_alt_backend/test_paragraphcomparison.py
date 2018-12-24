@@ -1,16 +1,16 @@
 import unittest
 
-from sentences.alt_backend.paragraph_comparison import (
+from paragraph_generator.alt_backend.paragraph_comparison import (
     ParagraphComparison, find_noun_group, find_verb_group, find_word,
     find_word_group, compare_sentences,
     get_word_locations, filter_locations, get_word, get_punctuation)
-from sentences.word_groups.paragraph import Paragraph
-from sentences.word_groups.sentence import Sentence
-from sentences.words.basicword import BasicWord
-from sentences.words.noun import Noun
-from sentences.words.pronoun import Pronoun
-from sentences.words.punctuation import Punctuation
-from sentences.words.verb import Verb
+from paragraph_generator.word_groups.paragraph import Paragraph
+from paragraph_generator.word_groups.sentence import Sentence
+from paragraph_generator.words.basicword import BasicWord
+from paragraph_generator.words.noun import Noun
+from paragraph_generator.words.pronoun import Pronoun
+from paragraph_generator.words.punctuation import Punctuation
+from paragraph_generator.words.verb import Verb
 
 
 class TestParagraphComparison(unittest.TestCase):

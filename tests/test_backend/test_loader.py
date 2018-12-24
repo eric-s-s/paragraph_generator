@@ -2,15 +2,15 @@ import unittest
 
 import os
 
-from sentences.backend.loader import (load_csv, strip_spaces,
-                                      countable_nouns, uncountable_nouns, verbs, proper_nouns,
-                                      get_verb_dict, LoaderError)
+from paragraph_generator.backend.loader import (load_csv, strip_spaces,
+                                                countable_nouns, uncountable_nouns, verbs, proper_nouns,
+                                                get_verb_dict, LoaderError)
 
-from sentences.words.noun import Noun
-from sentences.words.verb import Verb
-from sentences.words.basicword import BasicWord
-from sentences.tags.wordtag import WordTag
-from sentences import DATA_PATH, VERBS_CSV, COUNTABLE_NOUNS_CSV
+from paragraph_generator.words.noun import Noun
+from paragraph_generator.words.verb import Verb
+from paragraph_generator.words.basicword import BasicWord
+from paragraph_generator.tags.wordtag import WordTag
+from paragraph_generator import DATA_PATH, VERBS_CSV, COUNTABLE_NOUNS_CSV
 from tests import TESTS_FILES
 
 

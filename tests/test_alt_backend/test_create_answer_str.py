@@ -1,18 +1,18 @@
 import unittest
 
-from sentences.alt_backend.create_answer_paragraph import create_answer_paragraph
-from sentences.alt_backend.new_grammarizer import NewGrammarizer
-from sentences.backend.random_assignments.assign_random_negatives import assign_random_negatives
-from sentences.backend.random_assignments.plurals_assignement import PluralsAssignment
-from sentences.tags.status_tag import StatusTag
-from sentences.tags.tags import Tags
-from sentences.word_groups.paragraph import Paragraph
-from sentences.word_groups.sentence import Sentence
-from sentences.words.basicword import BasicWord
-from sentences.words.noun import Noun
-from sentences.words.pronoun import Pronoun
-from sentences.words.punctuation import Punctuation
-from sentences.words.verb import Verb
+from paragraph_generator.alt_backend.create_answer_paragraph import create_answer_paragraph
+from paragraph_generator.alt_backend.new_grammarizer import NewGrammarizer
+from paragraph_generator.backend.random_assignments.assign_random_negatives import assign_random_negatives
+from paragraph_generator.backend.random_assignments.plurals_assignement import PluralsAssignment
+from paragraph_generator.tags.status_tag import StatusTag
+from paragraph_generator.tags.tags import Tags
+from paragraph_generator.word_groups.paragraph import Paragraph
+from paragraph_generator.word_groups.sentence import Sentence
+from paragraph_generator.words.basicword import BasicWord
+from paragraph_generator.words.noun import Noun
+from paragraph_generator.words.pronoun import Pronoun
+from paragraph_generator.words.punctuation import Punctuation
+from paragraph_generator.words.verb import Verb
 
 
 class TestCreateAnswerParagraph(unittest.TestCase):

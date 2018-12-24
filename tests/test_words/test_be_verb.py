@@ -1,10 +1,10 @@
 import unittest
 
-from sentences.tags.tags import Tags
-from sentences.tags.wordtag import WordTag
-from sentences.words.basicword import BasicWord
-from sentences.words.be_verb import BeVerb
-from sentences.words.wordtools.abstractword import AbstractWord
+from paragraph_generator.tags.tags import Tags
+from paragraph_generator.tags.wordtag import WordTag
+from paragraph_generator.words.basicword import BasicWord
+from paragraph_generator.words.be_verb import BeVerb
+from paragraph_generator.words.wordtools.abstractword import AbstractWord
 
 
 class TestBeVerb(unittest.TestCase):

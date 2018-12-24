@@ -1,10 +1,10 @@
 import string
 import unittest
 
-from sentences.words.noun import Noun, get_plural_value, get_article
-from sentences.words.basicword import BasicWord
-from sentences.tags.wordtag import WordTag
-from sentences.tags.tags import Tags
+from paragraph_generator.words.noun import Noun, get_plural_value, get_article
+from paragraph_generator.words.basicword import BasicWord
+from paragraph_generator.tags.wordtag import WordTag
+from paragraph_generator.tags.tags import Tags
 
 
 class TestNoun(unittest.TestCase):

@@ -1,8 +1,8 @@
 import unittest
 
-from sentences.words.wordtools.abstractword import AbstractWord
-from sentences.tags.wordtag import WordTag
-from sentences.tags.tags import Tags
+from paragraph_generator.words.wordtools.abstractword import AbstractWord
+from paragraph_generator.tags.wordtag import WordTag
+from paragraph_generator.tags.tags import Tags
 
 
 class DummyWord(AbstractWord):

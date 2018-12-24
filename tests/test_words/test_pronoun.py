@@ -1,9 +1,9 @@
 import unittest
 
-from sentences.words.wordtools.abstractword import AbstractWord
-from sentences.words.pronoun import Pronoun, CapitalPronoun, AbstractPronoun
-from sentences.words.basicword import BasicWord
-from sentences.tags.wordtag import WordTag
+from paragraph_generator.words.wordtools.abstractword import AbstractWord
+from paragraph_generator.words.pronoun import Pronoun, CapitalPronoun, AbstractPronoun
+from paragraph_generator.words.basicword import BasicWord
+from paragraph_generator.tags.wordtag import WordTag
 
 
 class DummyPronoun(AbstractPronoun):

@@ -1,11 +1,11 @@
 import unittest
 
-from sentences.tags.status_tag import StatusTag
-from sentences.tags.tags import Tags
-from sentences.word_groups.paragraph import Paragraph
-from sentences.word_groups.sentence import Sentence
-from sentences.words.basicword import BasicWord
-from sentences.words.punctuation import Punctuation
+from paragraph_generator.tags.status_tag import StatusTag
+from paragraph_generator.tags.tags import Tags
+from paragraph_generator.word_groups.paragraph import Paragraph
+from paragraph_generator.word_groups.sentence import Sentence
+from paragraph_generator.words.basicword import BasicWord
+from paragraph_generator.words.punctuation import Punctuation
 
 
 class TestParagraph(unittest.TestCase):

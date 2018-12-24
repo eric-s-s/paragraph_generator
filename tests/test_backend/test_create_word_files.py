@@ -4,8 +4,8 @@ import filecmp
 import shutil
 import os
 
-from sentences import DATA_PATH, VERBS_CSV, UNCOUNTABLE_NOUNS_CSV, COUNTABLE_NOUNS_CSV, PROPER_NOUNS_CSV
-from sentences.backend.create_word_files import create_default_word_files, copy_to_numbered_old_file
+from paragraph_generator import DATA_PATH, VERBS_CSV, UNCOUNTABLE_NOUNS_CSV, COUNTABLE_NOUNS_CSV, PROPER_NOUNS_CSV
+from paragraph_generator.backend.create_word_files import create_default_word_files, copy_to_numbered_old_file
 
 from tests import TESTS_FILES
 

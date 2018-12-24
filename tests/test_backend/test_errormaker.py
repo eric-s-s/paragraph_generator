@@ -2,15 +2,15 @@ import random
 import unittest
 from typing import List, Any
 
-from sentences.backend.errormaker import (copy_paragraph, make_verb_error, make_noun_error,
-                                          make_is_do_error, find_subject_special_case, ErrorMaker)
-from sentences.tags.tags import Tags
-from sentences.tags.wordtag import WordTag
-from sentences.words.basicword import BasicWord
-from sentences.words.noun import Noun
-from sentences.words.pronoun import Pronoun, CapitalPronoun
-from sentences.words.punctuation import Punctuation
-from sentences.words.verb import Verb
+from paragraph_generator.backend.errormaker import (copy_paragraph, make_verb_error, make_noun_error,
+                                                    make_is_do_error, find_subject_special_case, ErrorMaker)
+from paragraph_generator.tags.tags import Tags
+from paragraph_generator.tags.wordtag import WordTag
+from paragraph_generator.words.basicword import BasicWord
+from paragraph_generator.words.noun import Noun
+from paragraph_generator.words.pronoun import Pronoun, CapitalPronoun
+from paragraph_generator.words.punctuation import Punctuation
+from paragraph_generator.words.verb import Verb
 
 
 class TestErrorMaker(unittest.TestCase):

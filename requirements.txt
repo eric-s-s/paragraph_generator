@@ -1,4 +1,0 @@
-olefile>=0.44
-Pillow>=4.3.0
-reportlab>=3.4.0
-cx_Freeze
