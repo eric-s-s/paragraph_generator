@@ -2,7 +2,7 @@ from sentences.words.pronoun import Pronoun, CapitalPronoun, AbstractPronoun
 from sentences.words.verb import Verb
 from sentences.words.noun import Noun
 from sentences.words.basicword import BasicWord
-from sentences.words.wordtools.wordtag import WordTag
+from sentences.tags.wordtag import WordTag
 
 
 def get_present_be_verb(sentence):
@@ -39,9 +39,3 @@ def is_third_person(word) -> bool:
     if isinstance(word, (Noun, AbstractPronoun)) and word not in first_person:
         return not word.has_tags(WordTag.PLURAL)
     return False
-
-
-def is_word_in_sentence(word, raw_sentence):
-    if isinstance(word, AbstractPronoun):
-        return any(word.is_pair(element) for element in raw_sentence)
-    return word in raw_sentence

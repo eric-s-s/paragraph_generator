@@ -4,13 +4,13 @@ from typing import List, Any
 
 from sentences.backend.errormaker import (copy_paragraph, make_verb_error, make_noun_error,
                                           make_is_do_error, find_subject_special_case, ErrorMaker)
-from sentences.words.noun import Noun
-from sentences.words.punctuation import Punctuation
-from sentences.words.pronoun import Pronoun, CapitalPronoun
-from sentences.words.verb import Verb
+from sentences.tags.tags import Tags
+from sentences.tags.wordtag import WordTag
 from sentences.words.basicword import BasicWord
-from sentences.words.wordtools.wordtag import WordTag
-from sentences.words.wordtools.tags import Tags
+from sentences.words.noun import Noun
+from sentences.words.pronoun import Pronoun, CapitalPronoun
+from sentences.words.punctuation import Punctuation
+from sentences.words.verb import Verb
 
 
 class TestErrorMaker(unittest.TestCase):
@@ -132,7 +132,7 @@ class TestErrorMaker(unittest.TestCase):
         for index in range(10):
             to_test = make_noun_error(noun)
             if index in definite:
-                self.assertEqual(Noun('the Eds', '', 'Eds', tags=self.definite), to_test)
+                self.assertEqual(Noun('the Eds', '', 'Eds', tags=self.definite_plural), to_test)
             else:
                 self.assertEqual(Noun('an Eds', '', 'Eds', tags=self.indefinite), to_test)
 
@@ -143,7 +143,7 @@ class TestErrorMaker(unittest.TestCase):
         for index in range(10):
             to_test = make_noun_error(noun)
             if index in definite:
-                self.assertEqual(Noun('the the Joneses', '', 'the Joneses', tags=self.definite), to_test)
+                self.assertEqual(Noun('the the Joneses', '', 'the Joneses', tags=self.definite_plural), to_test)
             else:
                 self.assertEqual(Noun('a the Joneses', '', 'the Joneses', tags=self.indefinite), to_test)
 
