@@ -1,6 +1,6 @@
 import unittest
 
-from paragraph_generator.alt_backend.paragraph_comparison import (
+from paragraph_generator.backend.paragraph_comparison import (
     ParagraphComparison, find_noun_group, find_verb_group, find_word,
     find_word_group, compare_sentences,
     get_word_locations, filter_locations, get_word, get_punctuation)

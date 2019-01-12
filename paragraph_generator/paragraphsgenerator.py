@@ -1,8 +1,8 @@
-from paragraph_generator.backend.errormaker import ErrorMaker
-from paragraph_generator.backend.grammarizer import Grammarizer
-from paragraph_generator.backend.loader import verbs, uncountable_nouns, countable_nouns, proper_nouns
-from paragraph_generator.backend.random_assignments.random_paragraph import RandomParagraph
-from paragraph_generator.backend.wordconnector import convert_paragraph
+# from paragraph_generator.backend.errormaker import ErrorMaker
+# from paragraph_generator.backend.grammarizer import Grammarizer
+# from paragraph_generator.backend.loader import verbs, uncountable_nouns, countable_nouns, proper_nouns
+# from paragraph_generator.backend.random_assignments.random_paragraph import RandomParagraph
+# from paragraph_generator.backend.wordconnector import convert_paragraph
 
 
 class ParagraphsGenerator(object):

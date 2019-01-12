@@ -1,4 +1,4 @@
-from paragraph_generator.alt_backend.new_grammarizer import NewGrammarizer
+from paragraph_generator.backend.grammarizer import Grammarizer
 from paragraph_generator.backend.random_assignments.plurals_assignement import get_countable_nouns, PluralsAssignment
 from paragraph_generator.tags.status_tag import StatusTag
 from paragraph_generator.tags.wordtag import WordTag
@@ -8,7 +8,7 @@ from paragraph_generator.words.verb import Verb
 def create_answer_paragraph(paragraph_str, base_paragraph):
     plurals_assigned_with_no_articles = _get_plurals_paragraph(base_paragraph, paragraph_str)
     verbs_have_negatives_but_no_grammar = _revert_verbs(plurals_assigned_with_no_articles)
-    grammarizer = NewGrammarizer(verbs_have_negatives_but_no_grammar)
+    grammarizer = Grammarizer(verbs_have_negatives_but_no_grammar)
     if base_paragraph.tags.has(StatusTag.SIMPLE_PAST):
         answer = grammarizer.grammarize_to_past_tense()
     else:

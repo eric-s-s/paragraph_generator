@@ -1,127 +1,93 @@
-import random
-from copy import deepcopy
-from typing import List, Union
-
-from paragraph_generator.backend.investigation_tools import requires_third_person, find_subject
-from paragraph_generator.words.pronoun import AbstractPronoun
-from paragraph_generator.words.punctuation import Punctuation
-from paragraph_generator.words.noun import Noun
-from paragraph_generator.words.verb import Verb
-from paragraph_generator.words.wordtools.abstractword import AbstractWord
+from paragraph_generator.tags.status_tag import StatusTag
 from paragraph_generator.tags.wordtag import WordTag
-
-Paragraph = List[List[Union[AbstractWord, AbstractPronoun, Punctuation]]]
+from paragraph_generator.word_groups.paragraph import Paragraph
+from paragraph_generator.word_groups.sentence import Sentence
+from paragraph_generator.words.noun import Noun
+from paragraph_generator.words.pronoun import Pronoun, CapitalPronoun
 
 
 class Grammarizer(object):
-    def __init__(self, paragraph: Paragraph, present_tense: bool = True,
-                 probability_plural_noun: float = 0.3, probability_negative_verb: float = 0.3):
-        self._raw = [sentence[:] for sentence in paragraph]
-
-        self.present_tense = present_tense
-        self._plural = normalize_probability(probability_plural_noun)
-        self._negative = normalize_probability(probability_negative_verb)
-
-        self._noun_info = None
-        self.set_nouns()
+    def __init__(self, raw_paragraph: Paragraph):
+        self._raw = raw_paragraph
+        self._altered = None  # type: Paragraph
 
     @property
-    def noun_info(self):
-        return deepcopy(self._noun_info)
+    def raw(self):
+        return self._raw
 
-    @property
-    def plural(self):
-        return self._plural
+    def grammarize_to_present_tense(self):
+        self._altered = self._raw
+        self._assign_noun_articles()
+        self._assign_present_tense_verbs()
+        self._capitalize_first_letter_of_sentences()
+        return self._set_tags(StatusTag.SIMPLE_PRESENT)
 
-    @plural.setter
-    def plural(self, new: float):
-        self._plural = normalize_probability(new)
+    def grammarize_to_past_tense(self):
+        self._altered = self._raw
+        self._assign_noun_articles()
+        self._assign_past_tense_verbs()
+        self._capitalize_first_letter_of_sentences()
+        return self._set_tags(StatusTag.SIMPLE_PAST)
 
-    @property
-    def negative(self):
-        return self._negative
+    def _assign_present_tense_verbs(self):
+        for s_index, sentence in enumerate(self._altered):  # type: Sentence
+            v_index = sentence.get_verb()
+            if _needs_third_person(sentence):
+                new_verb = sentence.get(v_index).third_person()
+                new_sentence = sentence.set(v_index, new_verb)
+                self._altered = self._altered.set_sentence(s_index, new_sentence)
 
-    @negative.setter
-    def negative(self, new: float):
-        self._negative = normalize_probability(new)
+    def _assign_past_tense_verbs(self):
+        for s_index, sentence in enumerate(self._altered):  # type: Sentence
+            v_index = sentence.get_verb()
+            if v_index == -1:
+                continue
+            new_verb = sentence.get(v_index).past_tense()
+            new_sentence = sentence.set(v_index, new_verb)
+            self._altered = self._altered.set_sentence(s_index, new_sentence)
 
-    def reset_definite_nouns(self):
-        for value in self._noun_info.values():
-            value['definite'] = False
+    def _assign_noun_articles(self):
+        assign_definite = set()
+        for s_index, w_index, word in self._altered.indexed_all_words():
+            if _is_alterable_noun(word):
+                if word in assign_definite:
+                    self._altered = self._altered.set(s_index, w_index, word.definite())  # type: Paragraph
+                else:
+                    new_word = word if word.has_tags(WordTag.PLURAL) else word.indefinite()
+                    self._altered = self._altered.set(s_index, w_index, new_word)
+                    assign_definite.add(word)
 
-    def set_nouns(self):
-        nouns = get_non_proper_nouns(self._raw)
-        pool = {}
-        for noun in nouns:
-            use_plural = False
-            countable = not noun.has_tags(WordTag.UNCOUNTABLE)
-            if countable and random.random() < self._plural:
-                use_plural = True
-            pool[noun] = {'plural': use_plural, 'definite': False, 'countable': countable}
-        self._noun_info = pool
+    def _capitalize_first_letter_of_sentences(self):
+        for s_index, sentence in enumerate(self._altered):
+            old = sentence.get(0)
+            new_sentence = sentence.set(0, old.capitalize())
+            self._altered = self._altered.set_sentence(s_index, new_sentence)
 
-    def generate_paragraph(self):
-        self.reset_definite_nouns()
-        answer = []
-        for sentence in self._raw:
-            new_sentence = []
-            for original_wd in sentence:
-                new_wd = original_wd
-
-                if is_non_proper_noun(new_wd):
-                    new_wd = self._modify_noun(new_wd)
-
-                if isinstance(new_wd, Verb):
-                    new_wd = self._assign_negatives(new_wd)
-
-                new_sentence.append(new_wd)
-
-            answer.append(new_sentence)
-
-        for sentence in answer:
-            self._modify_verb_tense(sentence)
-            sentence[0] = sentence[0].capitalize()
-
-        return answer
-
-    def _modify_noun(self, new_wd):
-        info = self._noun_info[new_wd]
-        if info['plural']:
-            new_wd = new_wd.plural()
-        if info['definite']:
-            new_wd = new_wd.definite()
-        else:
-            info['definite'] = True
-            if info['countable'] and not new_wd.has_tags(WordTag.PLURAL):
-                new_wd = new_wd.indefinite()
-        return new_wd
-
-    def _assign_negatives(self, new_wd):
-        if random.random() < self._negative:
-            new_wd = new_wd.negative()
-        return new_wd
-
-    def _modify_verb_tense(self, sentence):
-        verb_index = find_subject(sentence) + 1
-        if self.present_tense:
-            if requires_third_person(sentence):
-                sentence[verb_index] = sentence[verb_index].third_person()
-        else:
-            sentence[verb_index] = sentence[verb_index].past_tense()
+    def _set_tags(self, tense_tag):
+        new_tags = self._raw.tags.remove(StatusTag.RAW).add(tense_tag)
+        return self._altered.set_tags(new_tags)
 
 
-def normalize_probability(probability: float):
-    return min(1.0, max(probability, 0))
+def _is_alterable_noun(word):
+    uncountable_ = isinstance(word, Noun) and not (
+            word.has_tags(WordTag.PROPER) or word.has_tags(WordTag.UNCOUNTABLE))
+    return uncountable_
 
 
-def get_non_proper_nouns(paragraph: Paragraph) -> list:
-    answer = []
-    for sentence in paragraph:
-        for word in sentence:
-            if is_non_proper_noun(word) and word not in answer:  # Sets and random choice are untestable
-                answer.append(word)
-    return answer
+def _needs_third_person(sentence: Sentence):
+    verb_index = sentence.get_verb()
+    subject_index = sentence.get_subject()
+    if verb_index == -1 or subject_index == -1:
+        return False
 
+    subject = sentence.get(subject_index)
 
-def is_non_proper_noun(word):
-    return isinstance(word, Noun) and not word.has_tags(WordTag.PROPER)
+    first_person = (Pronoun.I, Pronoun.ME, CapitalPronoun.I, CapitalPronoun.ME)
+    if isinstance(subject, (Noun, Pronoun)) and subject not in first_person:
+        return not subject.has_tags(WordTag.PLURAL)
+    return False
+
+    # third_person_pronouns = (Pronoun.HE, Pronoun.SHE, Pronoun.IT)
+    # if isinstance(subject, Pronoun) and subject not in third_person_pronouns:
+    #     return False
+    # return not subject.has_tags(WordTag.PLURAL)

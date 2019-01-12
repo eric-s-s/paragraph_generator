@@ -1,7 +1,7 @@
 import random
 import unittest
 
-from paragraph_generator.alt_backend.new_error_maker import make_verb_error, make_noun_error, NewErrorMaker, get_be_verb
+from paragraph_generator.backend.error_maker import make_verb_error, make_noun_error, ErrorMaker, get_be_verb
 from paragraph_generator.tags.status_tag import StatusTag
 from paragraph_generator.tags.tags import Tags
 from paragraph_generator.tags.wordtag import WordTag
@@ -15,7 +15,7 @@ from paragraph_generator.words.punctuation import Punctuation
 from paragraph_generator.words.verb import Verb
 
 
-class TestNewErrorMaker(unittest.TestCase):
+class TestErrorMaker(unittest.TestCase):
 
     def setUp(self):
         self.indefinite = Tags([WordTag.INDEFINITE])
@@ -312,12 +312,12 @@ class TestNewErrorMaker(unittest.TestCase):
 
     def test_error_maker_init(self):
         paragraph = Paragraph([Sentence([Noun('eskimo')])])
-        error_maker = NewErrorMaker(paragraph)
+        error_maker = ErrorMaker(paragraph)
         self.assertEqual(error_maker.get_paragraph(), paragraph)
 
     def test_error_maker_empty_paragraph(self):
         paragraph = Paragraph([])
-        error_maker = NewErrorMaker(paragraph)
+        error_maker = ErrorMaker(paragraph)
 
         self.assertEqual(error_maker.noun_errors(1.0).get_paragraph().sentence_list(), [])
         self.assertEqual(error_maker.pronoun_errors(1.0).get_paragraph().sentence_list(), [])
@@ -328,7 +328,7 @@ class TestNewErrorMaker(unittest.TestCase):
 
     def test_error_maker_noun_errors_changes_tags(self):
         paragraph = Paragraph([], Tags([StatusTag.PRONOUN_ERRORS]))
-        new_error_maker = NewErrorMaker(paragraph).noun_errors(0.5)
+        new_error_maker = ErrorMaker(paragraph).noun_errors(0.5)
         self.assertEqual(new_error_maker.get_paragraph().tags,
                          paragraph.tags.add(StatusTag.NOUN_ERRORS))
 
@@ -336,7 +336,7 @@ class TestNewErrorMaker(unittest.TestCase):
         sentences = [Sentence([Noun('A'), Noun('b')]),
                      Sentence([Noun('d'), Noun('e')]),
                      Sentence([Noun('F'), Noun('g')])]
-        error_maker = NewErrorMaker(Paragraph(sentences))
+        error_maker = ErrorMaker(Paragraph(sentences))
         error_pargraph = error_maker.noun_errors(1.0).get_paragraph()
         capitals = [0, 2]
         for index, sentence in enumerate(error_pargraph):
@@ -349,7 +349,7 @@ class TestNewErrorMaker(unittest.TestCase):
     def test_error_maker_noun_errors_p_error_lte_zero(self):
         sentences = [Sentence([Noun('a'), Noun('b').plural(), Noun.uncountable_noun('c'), Noun.proper_noun('e')])]
         paragraph = Paragraph(sentences)
-        error_maker = NewErrorMaker(paragraph)
+        error_maker = ErrorMaker(paragraph)
 
         error_paragraph = error_maker.noun_errors(0.0).get_paragraph()
         self.assertEqual(error_paragraph.sentence_list(), sentences)
@@ -363,7 +363,7 @@ class TestNewErrorMaker(unittest.TestCase):
                      Sentence([Noun('d').indefinite(), Noun('e').plural()]),
                      Sentence([Noun.uncountable_noun('f')])]
         paragraph = Paragraph(sentences)
-        error_maker = NewErrorMaker(paragraph)
+        error_maker = ErrorMaker(paragraph)
 
         error_paragraph = error_maker.noun_errors(1.0).get_paragraph()
         expected = [Sentence([Noun('a').indefinite(), Noun.proper_noun('C').indefinite()]),
@@ -382,7 +382,7 @@ class TestNewErrorMaker(unittest.TestCase):
         sentences = [Sentence([Noun('a').definite(), Noun.proper_noun('C')]),
                      Sentence([Noun('d').indefinite(), Noun('e').plural()])]
         paragraph = Paragraph(sentences)
-        error_maker = NewErrorMaker(paragraph)
+        error_maker = ErrorMaker(paragraph)
 
         error_paragraph = error_maker.noun_errors(0.5).get_paragraph()
         expected = [sentences[0],
@@ -392,14 +392,14 @@ class TestNewErrorMaker(unittest.TestCase):
     def test_error_maker_noun_error_does_not_affect_others(self):
         sentences = [Sentence([BasicWord.preposition('a'), Verb('a'), Pronoun.HIM,
                                CapitalPronoun.ME, Punctuation.COMMA, BeVerb.AM])]
-        error_maker = NewErrorMaker(Paragraph(sentences))
+        error_maker = ErrorMaker(Paragraph(sentences))
 
         error_paragraph = error_maker.noun_errors(1.0).get_paragraph()
         self.assertEqual(error_paragraph.sentence_list(), sentences)
 
     def test_error_maker_pronoun_errors_changes_tags(self):
         paragraph = Paragraph([], Tags([StatusTag.NOUN_ERRORS]))
-        new_error_maker = NewErrorMaker(paragraph).pronoun_errors(0.5)
+        new_error_maker = ErrorMaker(paragraph).pronoun_errors(0.5)
         self.assertEqual(new_error_maker.get_paragraph().tags,
                          paragraph.tags.add(StatusTag.PRONOUN_ERRORS))
 
@@ -407,7 +407,7 @@ class TestNewErrorMaker(unittest.TestCase):
         sentences = [Sentence([CapitalPronoun.I, Pronoun.ME]),
                      Sentence([Pronoun.HIM, Pronoun.HE]),
                      Sentence([CapitalPronoun.HER, Pronoun.THEY])]
-        error_maker = NewErrorMaker(Paragraph(sentences))
+        error_maker = ErrorMaker(Paragraph(sentences))
         error_pargraph = error_maker.pronoun_errors(1.0).get_paragraph()
         capitals = [0, 2]
         for index, sentence in enumerate(error_pargraph):
@@ -420,7 +420,7 @@ class TestNewErrorMaker(unittest.TestCase):
     def test_error_maker_pronoun_errors_p_error_lte_zero(self):
         sentences = [Sentence([Pronoun.HE, Pronoun.THEY, Pronoun.ME, Pronoun.YOU])]
         paragraph = Paragraph(sentences)
-        error_maker = NewErrorMaker(paragraph)
+        error_maker = ErrorMaker(paragraph)
 
         error_paragraph = error_maker.pronoun_errors(0.0).get_paragraph()
         self.assertEqual(error_paragraph.sentence_list(), sentences)
@@ -458,7 +458,7 @@ class TestNewErrorMaker(unittest.TestCase):
                               CapitalPronoun.US, Pronoun.WE,
                               CapitalPronoun.THEM, Pronoun.THEY])]
         paragraph = Paragraph(sentences)
-        error_maker = NewErrorMaker(paragraph)
+        error_maker = ErrorMaker(paragraph)
 
         error_paragraph = error_maker.pronoun_errors(1.0).get_paragraph()
         self.assertEqual(error_paragraph.sentence_list(), expected)
@@ -471,7 +471,7 @@ class TestNewErrorMaker(unittest.TestCase):
         sentences = [Sentence([Pronoun.I, Pronoun.HE]),
                      Sentence([Pronoun.US, Pronoun.THEM])]
         paragraph = Paragraph(sentences)
-        error_maker = NewErrorMaker(paragraph)
+        error_maker = ErrorMaker(paragraph)
 
         error_paragraph = error_maker.pronoun_errors(0.5).get_paragraph()
         expected = [Sentence([Pronoun.ME, Pronoun.HE]),
@@ -480,14 +480,14 @@ class TestNewErrorMaker(unittest.TestCase):
 
     def test_error_maker_pronoun_error_does_not_affect_others(self):
         sentences = [Sentence([BasicWord.preposition('a'), Verb('a'), Noun('a'), Punctuation.COMMA, BeVerb.AM])]
-        error_maker = NewErrorMaker(Paragraph(sentences))
+        error_maker = ErrorMaker(Paragraph(sentences))
 
         error_paragraph = error_maker.pronoun_errors(1.0).get_paragraph()
         self.assertEqual(error_paragraph.sentence_list(), sentences)
 
     def test_error_maker_verb_errors_changes_tags(self):
         paragraph = Paragraph([], Tags([StatusTag.PRONOUN_ERRORS]))
-        new_error_maker = NewErrorMaker(paragraph).verb_errors(0.5)
+        new_error_maker = ErrorMaker(paragraph).verb_errors(0.5)
         self.assertEqual(new_error_maker.get_paragraph().tags,
                          paragraph.tags.add(StatusTag.VERB_ERRORS))
 
@@ -495,7 +495,7 @@ class TestNewErrorMaker(unittest.TestCase):
         sentences = [Sentence([Verb('A'), Verb('b')]),
                      Sentence([Verb('d'), Verb('e')]),
                      Sentence([Verb('F'), Verb('g')])]
-        error_maker = NewErrorMaker(Paragraph(sentences))
+        error_maker = ErrorMaker(Paragraph(sentences))
         error_pargraph = error_maker.pronoun_errors(1.0).get_paragraph()
         capitals = [0, 2]
         for index, sentence in enumerate(error_pargraph):
@@ -510,7 +510,7 @@ class TestNewErrorMaker(unittest.TestCase):
                      Sentence([Verb('cry').negative(), Verb('dry').negative().third_person()]),
                      Sentence([Verb('pry').past_tense(), Verb('fry').negative().past_tense()])]
         paragraph = Paragraph(sentences)
-        error_maker = NewErrorMaker(paragraph)
+        error_maker = ErrorMaker(paragraph)
 
         error_paragraph = error_maker.verb_errors(0.0).get_paragraph()
         self.assertEqual(error_paragraph.sentence_list(), sentences)
@@ -524,7 +524,7 @@ class TestNewErrorMaker(unittest.TestCase):
                      Sentence([Verb('cry').negative(), Verb('dry').negative().third_person()]),
                      Sentence([Verb('pry').past_tense(), Verb('fry').negative().past_tense()])]
         paragraph = Paragraph(sentences)
-        error_maker = NewErrorMaker(paragraph)
+        error_maker = ErrorMaker(paragraph)
 
         error_paragraph = error_maker.verb_errors(1.0).get_paragraph()
         expected = [Sentence([Verb('play').past_tense(), Verb('like')]),
@@ -544,7 +544,7 @@ class TestNewErrorMaker(unittest.TestCase):
                      Sentence([Verb('cry').negative(), Verb('dry').negative().third_person()]),
                      Sentence([Verb('pry').past_tense(), Verb('fry').negative().past_tense()])]
         paragraph = Paragraph(sentences)
-        error_maker = NewErrorMaker(paragraph)
+        error_maker = ErrorMaker(paragraph)
 
         error_paragraph = error_maker.verb_errors(0.5).get_paragraph()
         expected = [Sentence([Verb('play'), Verb('like').past_tense()]),
@@ -555,14 +555,14 @@ class TestNewErrorMaker(unittest.TestCase):
     def test_error_maker_verb_error_does_not_affect_others(self):
         sentences = [Sentence([BasicWord.preposition('a'), Noun('a'), BeVerb.AM,
                                Pronoun.HIM, CapitalPronoun.ME, Punctuation.COMMA])]
-        error_maker = NewErrorMaker(Paragraph(sentences))
+        error_maker = ErrorMaker(Paragraph(sentences))
 
         error_paragraph = error_maker.verb_errors(1.0).get_paragraph()
         self.assertEqual(error_paragraph.sentence_list(), sentences)
 
     def test_error_maker_is_do_errors_changes_tags(self):
         paragraph = Paragraph([], Tags([StatusTag.PRONOUN_ERRORS]))
-        new_error_maker = NewErrorMaker(paragraph).is_do_errors(0.5)
+        new_error_maker = ErrorMaker(paragraph).is_do_errors(0.5)
         self.assertEqual(new_error_maker.get_paragraph().tags,
                          paragraph.tags.add(StatusTag.IS_DO_ERRORS))
 
@@ -571,7 +571,7 @@ class TestNewErrorMaker(unittest.TestCase):
                      Sentence([Verb('d'), Verb('e')]),
                      Sentence([Verb('F'), Verb('g')]),
                      Sentence([CapitalPronoun.HE, Verb('go')])]
-        error_maker = NewErrorMaker(Paragraph(sentences))
+        error_maker = ErrorMaker(Paragraph(sentences))
         error_pargraph = error_maker.pronoun_errors(1.0).get_paragraph()
         capitals = [0, 2, 3]
         for index, sentence in enumerate(error_pargraph):
@@ -588,7 +588,7 @@ class TestNewErrorMaker(unittest.TestCase):
                      Sentence([Pronoun.THEY, Verb('go').past_tense()]),
                      Sentence([Pronoun.HIM, Verb('go').past_tense().negative()])]
         paragraph = Paragraph(sentences)
-        error_maker = NewErrorMaker(paragraph)
+        error_maker = ErrorMaker(paragraph)
 
         error_paragraph = error_maker.is_do_errors(0.0).get_paragraph()
         self.assertEqual(error_paragraph.sentence_list(), sentences)
@@ -604,7 +604,7 @@ class TestNewErrorMaker(unittest.TestCase):
                      Sentence([Pronoun.THEY, Verb('go').past_tense()]),
                      Sentence([Pronoun.HIM, Verb('go').past_tense().negative()])]
         paragraph = Paragraph(sentences)
-        error_maker = NewErrorMaker(paragraph)
+        error_maker = ErrorMaker(paragraph)
 
         error_paragraph = error_maker.is_do_errors(1.0).get_paragraph()
         expected = [Sentence([Pronoun.HE, BeVerb.IS, Verb('play')]),
@@ -621,7 +621,7 @@ class TestNewErrorMaker(unittest.TestCase):
                      Sentence([Pronoun.HE, Verb('go')]),
                      Sentence([Pronoun.WE, Verb('go')])]
         paragraph = Paragraph(sentences)
-        error_maker = NewErrorMaker(paragraph)
+        error_maker = ErrorMaker(paragraph)
 
         error_paragraph = error_maker.is_do_errors(0.5).get_paragraph()
         expected = [Sentence([Pronoun.I, Verb('go')]),
@@ -633,14 +633,14 @@ class TestNewErrorMaker(unittest.TestCase):
     def test_error_maker_is_do_error_does_not_affect_others(self):
         sentences = [Sentence([BasicWord.preposition('a'), Noun('a'), BeVerb.AM,
                                Pronoun.HIM, CapitalPronoun.ME, Punctuation.COMMA])]
-        error_maker = NewErrorMaker(Paragraph(sentences))
+        error_maker = ErrorMaker(Paragraph(sentences))
 
         error_paragraph = error_maker.is_do_errors(1.0).get_paragraph()
         self.assertEqual(error_paragraph.sentence_list(), sentences)
 
     def test_error_maker_preposition_errors_changes_tags(self):
         paragraph = Paragraph([], Tags([StatusTag.PRONOUN_ERRORS]))
-        new_error_maker = NewErrorMaker(paragraph).preposition_errors(0.5)
+        new_error_maker = ErrorMaker(paragraph).preposition_errors(0.5)
         self.assertEqual(new_error_maker.get_paragraph().tags,
                          paragraph.tags.add(StatusTag.PREPOSITION_ERRORS))
 
@@ -648,7 +648,7 @@ class TestNewErrorMaker(unittest.TestCase):
         sentences = [Sentence([Verb('Go'), BasicWord.preposition('with'), Pronoun.HIM]),
                      Sentence([Verb('go'), BasicWord.preposition('with'), Pronoun.HIM]),
                      Sentence([Verb('Eat'), BasicWord.preposition('at'), Noun("Joe's")])]
-        error_maker = NewErrorMaker(Paragraph(sentences))
+        error_maker = ErrorMaker(Paragraph(sentences))
         error_pargraph = error_maker.pronoun_errors(1.0).get_paragraph()
         capitals = [0, 2, 3]
         for index, sentence in enumerate(error_pargraph):
@@ -662,7 +662,7 @@ class TestNewErrorMaker(unittest.TestCase):
         sentences = [Sentence([Pronoun.I, Verb('go'), BasicWord.preposition('with'), Pronoun.HIM]),
                      Sentence([Pronoun.HE, Verb('run'), BasicWord.preposition('over'), Pronoun.IT])]
         paragraph = Paragraph(sentences)
-        error_maker = NewErrorMaker(paragraph)
+        error_maker = ErrorMaker(paragraph)
 
         error_paragraph = error_maker.preposition_errors(0.0).get_paragraph()
         self.assertEqual(error_paragraph.sentence_list(), sentences)
@@ -674,7 +674,7 @@ class TestNewErrorMaker(unittest.TestCase):
         sentences = [Sentence([Pronoun.I, Verb('go'), BasicWord.preposition('with'), Pronoun.HIM, Punctuation.PERIOD]),
                      Sentence([Pronoun.HE, Verb('run'), BasicWord.preposition('over'), Pronoun.IT, Punctuation.PERIOD])]
         paragraph = Paragraph(sentences)
-        error_maker = NewErrorMaker(paragraph)
+        error_maker = ErrorMaker(paragraph)
 
         error_paragraph = error_maker.preposition_errors(1.0).get_paragraph()
         expected = [Sentence([Pronoun.I, BasicWord.preposition('with'), Pronoun.HIM, Verb('go'), Punctuation.PERIOD]),
@@ -686,7 +686,7 @@ class TestNewErrorMaker(unittest.TestCase):
                              BasicWord.preposition('with'), Noun('toe').indefinite(), Punctuation.PERIOD])
         expected = Sentence([Pronoun.I, BasicWord.preposition('with'), Noun('toe').indefinite(),
                              Verb('pick'), Pronoun.IT, BasicWord.particle('up'), Punctuation.PERIOD])
-        error_paragraph = NewErrorMaker(Paragraph([sentence])).preposition_errors(1.0).get_paragraph()
+        error_paragraph = ErrorMaker(Paragraph([sentence])).preposition_errors(1.0).get_paragraph()
         self.assertEqual(error_paragraph.sentence_list(), [expected])
 
     def test_error_maker_preposition_errors_p_error_middle_value(self):
@@ -696,7 +696,7 @@ class TestNewErrorMaker(unittest.TestCase):
                      Sentence([Verb('go'), BasicWord.preposition('into'), Pronoun.IT]),
                      Sentence([Verb('go'), BasicWord.preposition('under'), BasicWord('that')])]
         paragraph = Paragraph(sentences)
-        error_maker = NewErrorMaker(paragraph)
+        error_maker = ErrorMaker(paragraph)
 
         error_paragraph = error_maker.preposition_errors(0.5).get_paragraph()
         expected = [Sentence([Verb('go'), BasicWord.preposition('with'), Pronoun.ME]),
@@ -708,14 +708,14 @@ class TestNewErrorMaker(unittest.TestCase):
     def test_error_maker_preposition_error_does_not_affect_others(self):
         sentences = [Sentence([Verb('a'), Noun('a'), BeVerb.AM,
                                Pronoun.HIM, CapitalPronoun.ME, Punctuation.COMMA])]
-        error_maker = NewErrorMaker(Paragraph(sentences))
+        error_maker = ErrorMaker(Paragraph(sentences))
 
         error_paragraph = error_maker.preposition_errors(1.0).get_paragraph()
         self.assertEqual(error_paragraph.sentence_list(), sentences)
 
     def test_error_maker_punctuation_errors_changes_tags(self):
         paragraph = Paragraph([], Tags([StatusTag.PRONOUN_ERRORS]))
-        new_error_maker = NewErrorMaker(paragraph).punctuation_errors(0.5)
+        new_error_maker = ErrorMaker(paragraph).punctuation_errors(0.5)
         self.assertEqual(new_error_maker.get_paragraph().tags,
                          paragraph.tags.add(StatusTag.PUNCTUATION_ERRORS))
 
@@ -723,7 +723,7 @@ class TestNewErrorMaker(unittest.TestCase):
         sentences = [Sentence([CapitalPronoun.I, Verb('go'), Pronoun.HIM, Punctuation.PERIOD]),
                      Sentence([CapitalPronoun.HE, Verb('run'), Pronoun.IT, Punctuation.EXCLAMATION])]
         paragraph = Paragraph(sentences)
-        error_maker = NewErrorMaker(paragraph)
+        error_maker = ErrorMaker(paragraph)
 
         error_paragraph = error_maker.punctuation_errors(0.0).get_paragraph()
         self.assertEqual(error_paragraph.sentence_list(), sentences)
@@ -735,7 +735,7 @@ class TestNewErrorMaker(unittest.TestCase):
         sentences = [Sentence([CapitalPronoun.I, Verb('go'), Pronoun.HIM, Punctuation.PERIOD]),
                      Sentence([CapitalPronoun.HE, Verb('run'), Pronoun.IT, Punctuation.EXCLAMATION])]
         paragraph = Paragraph(sentences)
-        error_maker = NewErrorMaker(paragraph)
+        error_maker = ErrorMaker(paragraph)
 
         error_paragraph = error_maker.punctuation_errors(1.0).get_paragraph()
         expected = [Sentence([CapitalPronoun.I, Verb('go'), Pronoun.HIM, Punctuation.COMMA]),
@@ -749,7 +749,7 @@ class TestNewErrorMaker(unittest.TestCase):
                      Sentence([Noun('dog').definite().capitalize(), Punctuation.PERIOD]),
                      Sentence([BasicWord('A'), Punctuation.PERIOD])]
         paragraph = Paragraph(sentences)
-        error_maker = NewErrorMaker(paragraph)
+        error_maker = ErrorMaker(paragraph)
 
         error_paragraph = error_maker.punctuation_errors(0.5).get_paragraph()
 
@@ -772,7 +772,7 @@ class TestNewErrorMaker(unittest.TestCase):
         original_str = 'I play. I play. the dog plays. the dog plays. I play. the dog plays.'
         self.assertEqual(str(Paragraph(sentences)), original_str)
 
-        error_maker = NewErrorMaker(Paragraph(sentences))
+        error_maker = ErrorMaker(Paragraph(sentences))
 
         verb_then_is_do = error_maker.verb_errors(1.0).is_do_errors(1.0).get_paragraph()
         verb_then_is_do_str = 'I was play. I am play. the dog was play. the dog is play. I am play. the dog is play.'
@@ -790,7 +790,7 @@ class TestNewErrorMaker(unittest.TestCase):
                 [Noun('dog').definite(), Verb('play').third_person(), Punctuation.PERIOD, BasicWord.preposition('with'),
                  Pronoun.HIM]),
         ]
-        error_maker = NewErrorMaker(Paragraph(sentences))
+        error_maker = ErrorMaker(Paragraph(sentences))
 
         is_do_preposition = error_maker.is_do_errors(1.0).preposition_errors(1.0).get_paragraph()
         expected_str = 'I with him am play. the dog with him is play.'
@@ -803,7 +803,7 @@ class TestNewErrorMaker(unittest.TestCase):
     def test_regression_test_verb_error_is_do_error(self):
         random.seed(11)
         paragraph = Paragraph([Sentence([Pronoun.HE, Verb('play').negative().third_person()])])
-        error_maker = NewErrorMaker(paragraph)
+        error_maker = ErrorMaker(paragraph)
 
         verb_error = error_maker.verb_errors(1.0)
         verb_is_do_error = verb_error.is_do_errors(1.0)

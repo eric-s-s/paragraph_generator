@@ -11,7 +11,7 @@ from paragraph_generator.words.verb import Verb
 from paragraph_generator.words.wordtools.common_functions import add_s
 
 
-class NewErrorMaker(object):
+class ErrorMaker(object):
     def __init__(self, paragraph: Paragraph):
         self._paragraph = paragraph
         self._error_paragraph = None  # type: Paragraph
@@ -28,7 +28,7 @@ class NewErrorMaker(object):
                 new_noun = make_noun_error(word)
                 self._error_paragraph = self._error_paragraph.set(s_index, w_index, new_noun)
         self._recapitalize_first_word()
-        return NewErrorMaker(self._error_paragraph)
+        return ErrorMaker(self._error_paragraph)
 
     def pronoun_errors(self, p_error):
         self._error_paragraph = self._paragraph
@@ -43,7 +43,7 @@ class NewErrorMaker(object):
                         new_word = word.object()
                     self._error_paragraph = self._error_paragraph.set(s_index, w_index, new_word)
 
-        return NewErrorMaker(self._error_paragraph)
+        return ErrorMaker(self._error_paragraph)
 
     def verb_errors(self, p_error):
         self._error_paragraph = self._paragraph
@@ -55,7 +55,7 @@ class NewErrorMaker(object):
                 self._error_paragraph = self._error_paragraph.set(s_index, w_index, new_verb)
 
         self._recapitalize_first_word()
-        return NewErrorMaker(self._error_paragraph)
+        return ErrorMaker(self._error_paragraph)
 
     def is_do_errors(self, p_error):
         self._error_paragraph = self._paragraph
@@ -71,7 +71,7 @@ class NewErrorMaker(object):
                 new_sentence = sentence.set(v_index, verb.to_basic_verb())
                 new_sentence = new_sentence.insert(v_index, be_verb)
                 self._error_paragraph = self._error_paragraph.set_sentence(s_index, new_sentence)
-        return NewErrorMaker(self._error_paragraph)
+        return ErrorMaker(self._error_paragraph)
 
     def preposition_errors(self, p_error):
         self._error_paragraph = self._paragraph
@@ -85,7 +85,7 @@ class NewErrorMaker(object):
                 sentence = sentence.insert(v_index, obj).insert(v_index, word)
                 self._error_paragraph = self._error_paragraph.set_sentence(s_index, sentence)
 
-        return NewErrorMaker(self._error_paragraph)
+        return ErrorMaker(self._error_paragraph)
 
     def punctuation_errors(self, p_error):
         self._error_paragraph = self._paragraph
@@ -95,7 +95,7 @@ class NewErrorMaker(object):
                 new_sentence = sentence.set(-1, Punctuation.COMMA)
                 self._error_paragraph = self._error_paragraph.set_sentence(s_index, new_sentence)
         self._decapitalize_at_commas()
-        return NewErrorMaker(self._error_paragraph)
+        return ErrorMaker(self._error_paragraph)
 
     def _decapitalize_at_commas(self):
         for index, sentence in enumerate(self._error_paragraph.sentence_list()[:-1]):
