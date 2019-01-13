@@ -2,13 +2,13 @@ import random
 import unittest
 
 from paragraph_generator.backend.random_assignments.random_paragraph import RandomParagraph
-
 from paragraph_generator.word_groups.sentence import Sentence
+from paragraph_generator.word_groups.verb_group import VerbGroup
+from paragraph_generator.words.basicword import BasicWord
+from paragraph_generator.words.noun import Noun
 from paragraph_generator.words.pronoun import Pronoun
 from paragraph_generator.words.punctuation import Punctuation
-from paragraph_generator.words.noun import Noun
 from paragraph_generator.words.verb import Verb
-from paragraph_generator.words.basicword import BasicWord
 
 PERIOD = Punctuation.PERIOD
 EXCLAMATION = Punctuation.EXCLAMATION
@@ -20,10 +20,10 @@ class TestRandomParagraph(unittest.TestCase):
         self.countable = [Noun('dog'), Noun('cat'), Noun('pig'), Noun('frog')]
         self.uncountable = [Noun('water'), Noun('rice'), Noun('milk'), Noun('sand')]
         self.verbs = [
-            {'verb': Verb('eat'), 'preposition': None, 'objects': 1, 'particle': None},
-            {'verb': Verb('give'), 'preposition': None, 'objects': 2, 'particle': None},
-            {'verb': Verb('jump'), 'preposition': BasicWord.preposition('over'), 'objects': 1, 'particle': None},
-            {'verb': Verb('give'), 'preposition': BasicWord.preposition('to'), 'objects': 2, 'particle': None},
+            VerbGroup(verb=Verb('eat'), preposition=None, objects=1, particle=None),
+            VerbGroup(verb=Verb('give'), preposition=None, objects=2, particle=None),
+            VerbGroup(verb=Verb('jump'), preposition=BasicWord.preposition('over'), objects=1, particle=None),
+            VerbGroup(verb=Verb('give'), preposition=BasicWord.preposition('to'), objects=2, particle=None),
         ]
         self.rp = RandomParagraph(0.2, self.verbs, self.countable + self.uncountable)
 
@@ -44,7 +44,7 @@ class TestRandomParagraph(unittest.TestCase):
         self.assertRaises(ValueError, self.rp.get_subject_pool, 16)
 
     def test_create_pool_paragraph_is_correct_length(self):
-        verb_list = [{'verb': Verb('play'), 'preposition': None, 'objects': 0, 'particle': None}]
+        verb_list = [VerbGroup(verb=Verb('play'), preposition=None, objects=0, particle=None)]
         rp = RandomParagraph(0.2, verb_list, self.countable + self.uncountable)
 
         for length in range(3, 11):
@@ -65,7 +65,7 @@ class TestRandomParagraph(unittest.TestCase):
 
     def test_create_pool_paragraph_repeats_very_very_edge_case(self):
         random.seed(25)
-        verb_list = [{'verb': Verb('give'), 'preposition': None, 'objects': 2, 'particle': None}]
+        verb_list = [VerbGroup(verb=Verb('give'), preposition=None, objects=2, particle=None)]
 
         repeats = RandomParagraph(0.0, verb_list, [Noun('cat'), Noun('water')])
 
@@ -76,7 +76,7 @@ class TestRandomParagraph(unittest.TestCase):
         ]
         self.assertEqual(answer, expected)
 
-        no_prepositions = [verb_dict for verb_dict in self.verbs if verb_dict['preposition'] is None]
+        no_prepositions = [verb_group for verb_group in self.verbs if verb_group.preposition is None]
         no_repeats = RandomParagraph(0.0, no_prepositions, [Noun('cat'), Noun('water')])
         answer = no_repeats.create_pool_paragraph(2, 100)
         for sentence in answer:
@@ -103,7 +103,7 @@ class TestRandomParagraph(unittest.TestCase):
 
     def test_create_chain_paragraph_loop_safety_finally_returns_paragraph_with_repeat_words(self):
         random.seed(4564)
-        verb_list = [{'verb': Verb('give'), 'preposition': None, 'objects': 2, 'particle': None}]
+        verb_list = [VerbGroup(verb=Verb('give'), preposition=None, objects=2, particle=None)]
 
         repeats = RandomParagraph(0.0, verb_list, [Noun('joe'), Noun('bob')])
         paragraph = repeats.create_chain_paragraph(3)
@@ -115,7 +115,7 @@ class TestRandomParagraph(unittest.TestCase):
         self.assertEqual(expected, paragraph)
 
     def test_create_chain_paragraph_pronouns(self):
-        verb_list = [{'verb': Verb('eat'), 'preposition': None, 'objects': 1, 'particle': None}]
+        verb_list = [VerbGroup(verb=Verb('eat'), preposition=None, objects=1, particle=None)]
 
         rp = RandomParagraph(1.0, verb_list, self.countable + self.uncountable)
         answer = rp.create_chain_paragraph(10)
@@ -134,7 +134,7 @@ class TestRandomParagraph(unittest.TestCase):
 
     def test_create_chain_paragraph_assigns_random_subj_if_no_obj(self):
         random.seed(11)
-        verb_list = [{'verb': Verb('jump'), 'preposition': None, 'objects': 0, 'particle': None}]
+        verb_list = [VerbGroup(verb=Verb('jump'), preposition=None, objects=0, particle=None)]
         rp = RandomParagraph(0.2, verb_list, self.countable + self.uncountable)
         answer = rp.create_chain_paragraph(3)
         expected = [

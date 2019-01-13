@@ -43,7 +43,7 @@ class RandomSentences(object):
 
         verb_group = random.choice(self._verbs)
 
-        objects = self._get_objects(verb_group['objects'], p_pronoun)
+        objects = self._get_objects(verb_group.objects, p_pronoun)
 
         predicate = assign_objects(verb_group, objects)
 
@@ -80,9 +80,9 @@ class RandomSentences(object):
 
 
 def assign_objects(verb_group, objects):
-    preposition = [verb_group['preposition']]
-    separable_particle = [verb_group['particle']]
-    predicate = [verb_group['verb']]  # type: List[AbstractWord]
+    preposition = [verb_group.preposition]
+    separable_particle = [verb_group.particle]
+    predicate = [verb_group.verb]  # type: List[AbstractWord]
 
     while objects:
         obj = objects.pop()
