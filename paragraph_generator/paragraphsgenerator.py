@@ -1,98 +1,8 @@
-# from paragraph_generator.backend.errormaker import ErrorMaker
-# from paragraph_generator.backend.grammarizer import Grammarizer
-# from paragraph_generator.backend.loader import verbs, uncountable_nouns, countable_nouns, proper_nouns
-# from paragraph_generator.backend.random_assignments.random_paragraph import RandomParagraph
-# from paragraph_generator.backend.wordconnector import convert_paragraph
-
 import unittest
 
+from paragraph_generator.backend.random_assignments.assign_random_negatives import assign_random_negatives
+from paragraph_generator.backend.random_assignments.plurals_assignement import PluralsAssignment
 from paragraph_generator.backend.random_assignments.random_paragraph import RandomParagraph
-from paragraph_generator.word_groups.verb_group import VerbGroup
-from paragraph_generator.words.basicword import BasicWord
-from paragraph_generator.words.noun import Noun
-from paragraph_generator.words.pronoun import AbstractPronoun
-from paragraph_generator.words.punctuation import Punctuation
-from paragraph_generator.words.verb import Verb
-
-
-class DummyWordLists(object):
-    @property
-    def nouns(self):
-        return [Noun('dog'), Noun.proper_noun('Joe'), Noun.uncountable_noun('water')]
-
-    @property
-    def verbs(self):
-        return [
-            VerbGroup(Verb('go'), BasicWord.preposition('with'), BasicWord.particle('away'), 1),
-            VerbGroup(Verb('eat'), None, None, 1)
-        ]
-
-
-class TestParagraphsGenerator(unittest.TestCase):
-    def setUp(self):
-        self.config_state = {
-            'error_probability': 1.0,
-            'noun_errors': True,
-            'pronoun_errors': True,
-            'verb_errors': True,
-            'is_do_errors': True,
-            'preposition_transpose_errors': True,
-            'punctuation_errors': True,
-
-            'tense': 'simple_present',
-            'probability_plural_noun': 1.0,
-            'probability_negative_verb': 1.0,
-            'probability_pronoun': 1.0,
-
-            'paragraph_type': 'chain',
-            'subject_pool': 1,
-            'paragraph_size': 1,
-        }
-
-    def test_init(self):
-        dummy_word_lists = DummyWordLists()
-
-        to_test = ParagraphsGenerator(self.config_state, dummy_word_lists)
-        for key, value in self.config_state.items():
-            self.assertEqual(to_test.get(key), value)
-
-        self.assertEqual(to_test.get_nouns(), dummy_word_lists.nouns)
-        self.assertEqual(to_test.get_verbs(), dummy_word_lists.verbs)
-
-    def test_generate_paragraphs_paragraph_size(self):
-        for paragraph_size in range(1, 5):
-            self.config_state.update({'paragraph_size': paragraph_size})
-            answer, error = ParagraphsGenerator(self.config_state, DummyWordLists()).generate_paragraphs()
-            self.assertEqual(len(answer), paragraph_size)
-            self.assertEqual(len(error), paragraph_size)
-
-    def test_generate_paragraphs_probability_pronouns_zero(self):
-        test_config = {
-            'probability_pronoun': 0.0,
-        }
-        self.config_state.update(test_config)
-        to_test = ParagraphsGenerator(self.config_state, DummyWordLists())
-        answer, error = to_test.generate_paragraphs()
-        for _, _, word in answer.indexed_all_words():
-            self.assertNotIsInstance(word, AbstractPronoun)
-        for _, _, word in error.indexed_all_words():
-            self.assertNotIsInstance(word, AbstractPronoun)
-
-    def test_generate_paragraphs_probability_pronouns_one(self):
-        self.config_state.update({'probability_pronoun': 1.0})
-        answer, error = ParagraphsGenerator(self.config_state, DummyWordLists()).generate_paragraphs()
-        for _, w_index, word in answer.indexed_all_words():
-            expected = (AbstractPronoun, Verb, BasicWord, Punctuation)
-            if w_index == 0:
-                self.assertIsInstance(word, AbstractPronoun)
-            else:
-                self.assertIsInstance(word, expected)
-        for _, w_index, word in error.indexed_all_words():
-            expected = (AbstractPronoun, Verb, BasicWord, Punctuation)
-            if w_index == 0:
-                self.assertIsInstance(word, AbstractPronoun)
-            else:
-                self.assertIsInstance(word, expected)
 
 
 class ParagraphsGenerator(object):
@@ -118,7 +28,26 @@ class ParagraphsGenerator(object):
         - 'num_paragraphs'
         - 'paragraph_size'
         """
-        self._config = config_state.copy()
+        self._config = {
+            'error_probability': 0.2,
+            'noun_errors': True,
+            'pronoun_errors': True,
+            'verb_errors': True,
+            'punctuation_errors': True,
+            'is_do_errors': False,
+            'preposition_transpose_errors': False,
+
+            'tense': 'simple_present',
+            'probability_plural_noun': 0.2,
+            'probability_negative_verb': 0.3,
+            'probability_pronoun': 0.3,
+
+            'paragraph_type': 'chain',
+            'subject_pool': 5,
+            'paragraph_size': 15,
+        }
+
+        self._config.update(config_state)
         self._word_list_generator = word_lists_generator
 
     def get(self, key):
@@ -134,9 +63,15 @@ class ParagraphsGenerator(object):
         paragraph_size = self.get('paragraph_size')
         probability_pronoun = self.get('probability_pronoun')
         generator = RandomParagraph(probability_pronoun, self.get_verbs(), self.get_nouns())
-        random_paragraph = generator.create_chain_paragraph(paragraph_size)
+        raw = generator.create_chain_paragraph(paragraph_size)
 
-        return random_paragraph, random_paragraph
+        probability_plural_noun = self.get('probability_plural_noun')
+        with_plurals = PluralsAssignment(raw).assign_random_plurals(probability_plural_noun)
+
+        probability_negative_verb = self.get('probability_negative_verb')
+        with_negatives = assign_random_negatives(with_plurals, probability_negative_verb)
+
+        return with_negatives, with_plurals
 
         # self._options = {}
         # self._verbs_list = []
