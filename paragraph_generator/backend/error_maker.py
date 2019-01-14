@@ -27,7 +27,7 @@ class ErrorMaker(object):
             if isinstance(word, Noun) and random.random() < p_error:
                 new_noun = make_noun_error(word)
                 self._error_paragraph = self._error_paragraph.set(s_index, w_index, new_noun)
-        self._recapitalize_first_word()
+        self._recapitalize_first_word_if_original_capitalized()
         return ErrorMaker(self._error_paragraph)
 
     def pronoun_errors(self, p_error):
@@ -54,7 +54,7 @@ class ErrorMaker(object):
                 new_verb = make_verb_error(word)
                 self._error_paragraph = self._error_paragraph.set(s_index, w_index, new_verb)
 
-        self._recapitalize_first_word()
+        self._recapitalize_first_word_if_original_capitalized()
         return ErrorMaker(self._error_paragraph)
 
     def is_do_errors(self, p_error):
@@ -110,7 +110,7 @@ class ErrorMaker(object):
         new_tags = self._error_paragraph.tags.add(new_tag)
         self._error_paragraph = self._error_paragraph.set_tags(new_tags)
 
-    def _recapitalize_first_word(self):
+    def _recapitalize_first_word_if_original_capitalized(self):
         for s_index, sentence in enumerate(self._error_paragraph):
             try:
                 test_word = self._paragraph.get_sentence(s_index).get(0)
