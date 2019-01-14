@@ -2,6 +2,9 @@ import random
 import unittest
 
 from paragraph_generator.backend.random_assignments.random_paragraph import RandomParagraph
+from paragraph_generator.tags.status_tag import StatusTag
+from paragraph_generator.tags.tags import Tags
+from paragraph_generator.word_groups.paragraph import Paragraph
 from paragraph_generator.word_groups.sentence import Sentence
 from paragraph_generator.word_groups.verb_group import VerbGroup
 from paragraph_generator.words.basicword import BasicWord
@@ -26,6 +29,8 @@ class TestRandomParagraph(unittest.TestCase):
             VerbGroup(verb=Verb('give'), preposition=BasicWord.preposition('to'), objects=2, particle=None),
         ]
         self.rp = RandomParagraph(0.2, self.verbs, self.countable + self.uncountable)
+
+        self.raw_tags = Tags([StatusTag.RAW])
 
     def test_get_subject_pool_never_repeats(self):
         random.seed(10)
@@ -70,10 +75,11 @@ class TestRandomParagraph(unittest.TestCase):
         repeats = RandomParagraph(0.0, verb_list, [Noun('cat'), Noun('water')])
 
         answer = repeats.create_pool_paragraph(2, 2)
-        expected = [
+        sentences = [
             Sentence([Noun('water'), Verb('give'), Noun('cat'), Noun('water'), PERIOD]),
             Sentence([Noun('cat'), Verb('give'), Noun('cat'), Noun('water'), PERIOD])
         ]
+        expected = Paragraph(sentences, self.raw_tags)
         self.assertEqual(answer, expected)
 
         no_prepositions = [verb_group for verb_group in self.verbs if verb_group.preposition is None]
@@ -86,7 +92,7 @@ class TestRandomParagraph(unittest.TestCase):
     def test_create_pool_paragraph_output(self):
         random.seed(3)
         paragraph = self.rp.create_pool_paragraph(2, 5)
-        expected = [
+        sentences = [
             Sentence([Noun('pig'), Verb('eat'), Noun('sand'), PERIOD]),
             Sentence([Noun('pig'), Verb('give'), Noun('milk'), Noun('cat'), PERIOD]),
             Sentence([Noun('pig'), Verb('jump'), BasicWord.preposition('over'), Noun('water'), PERIOD]),
@@ -94,6 +100,7 @@ class TestRandomParagraph(unittest.TestCase):
             Sentence([Noun('sand'), Verb('give'), Noun('water'), BasicWord.preposition('to'), Noun('milk'),
                       EXCLAMATION])
         ]
+        expected = Paragraph(sentences, self.raw_tags)
         self.assertEqual(paragraph, expected)
 
     def test_create_chain_paragraph_is_correct_length(self):
@@ -107,11 +114,12 @@ class TestRandomParagraph(unittest.TestCase):
 
         repeats = RandomParagraph(0.0, verb_list, [Noun('joe'), Noun('bob')])
         paragraph = repeats.create_chain_paragraph(3)
-        expected = [
+        sentences = [
             Sentence([Noun('bob'), Verb('give'), Noun('joe'), Noun('bob'), PERIOD]),
             Sentence([Noun('bob'), Verb('give'), Noun('bob'), Noun('joe'), PERIOD]),
             Sentence([Noun('joe'), Verb('give'), Noun('bob'), Noun('joe'), PERIOD]),
         ]
+        expected = Paragraph(sentences, self.raw_tags)
         self.assertEqual(expected, paragraph)
 
     def test_create_chain_paragraph_pronouns(self):
@@ -119,16 +127,17 @@ class TestRandomParagraph(unittest.TestCase):
 
         rp = RandomParagraph(1.0, verb_list, self.countable + self.uncountable)
         answer = rp.create_chain_paragraph(10)
-        for back_index, sentence in enumerate(answer[1:]):
-            previous_obj = answer[back_index].get(-2)
+        for back_index, sentence in enumerate(answer.sentence_list()[1:]):
+            previous_obj = answer.get_sentence(back_index).get(-2)
             current_subj = sentence.get(0)
             self.assertEqual(previous_obj.subject(), current_subj)
 
     def test_create_chain_paragraph_nouns(self):
         rp = RandomParagraph(0.0, self.verbs, self.countable + self.uncountable)
         answer = rp.create_chain_paragraph(10)
-        for back_index, sentence in enumerate(answer[1:]):
-            previous_obj = answer[back_index].get(-2)
+        sentences = answer.sentence_list()
+        for back_index, sentence in enumerate(sentences[1:]):
+            previous_obj = sentences[back_index].get(-2)
             current_subj = sentence.get(0)
             self.assertEqual(previous_obj, current_subj)
 
@@ -137,20 +146,22 @@ class TestRandomParagraph(unittest.TestCase):
         verb_list = [VerbGroup(verb=Verb('jump'), preposition=None, objects=0, particle=None)]
         rp = RandomParagraph(0.2, verb_list, self.countable + self.uncountable)
         answer = rp.create_chain_paragraph(3)
-        expected = [
+        sentences = [
             Sentence([Noun('sand'), Verb('jump'), EXCLAMATION]),
             Sentence([Noun('frog'), Verb('jump'), EXCLAMATION]),
             Sentence([Noun('pig'), Verb('jump'), PERIOD])
         ]
+        expected = Paragraph(sentences, self.raw_tags)
         self.assertEqual(expected, answer)
 
     def test_create_chain_paragraph_output(self):
         random.seed(4567)
         answer = self.rp.create_chain_paragraph(4)
-        expected = [
+        sentences = [
             Sentence([Noun('water'), Verb('eat'), Noun('rice'), EXCLAMATION]),
             Sentence([Noun('rice'), Verb('give'), US, BasicWord.preposition('to'), Noun('cat'), PERIOD]),
             Sentence([Noun('cat'), Verb('eat'), Noun('dog'), PERIOD]),
             Sentence([Noun('dog'), Verb('jump'), BasicWord.preposition('over'), Noun('sand'), PERIOD]),
         ]
+        expected = Paragraph(sentences, self.raw_tags)
         self.assertEqual(answer, expected)

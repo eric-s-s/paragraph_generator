@@ -6,19 +6,22 @@
 
 import unittest
 
+from paragraph_generator.backend.random_assignments.random_paragraph import RandomParagraph
 from paragraph_generator.word_groups.verb_group import VerbGroup
 from paragraph_generator.words.basicword import BasicWord
 from paragraph_generator.words.noun import Noun
+from paragraph_generator.words.pronoun import AbstractPronoun
+from paragraph_generator.words.punctuation import Punctuation
 from paragraph_generator.words.verb import Verb
 
 
 class DummyWordLists(object):
-    @staticmethod
-    def nouns():
+    @property
+    def nouns(self):
         return [Noun('dog'), Noun.proper_noun('Joe'), Noun.uncountable_noun('water')]
 
-    @staticmethod
-    def verbs():
+    @property
+    def verbs(self):
         return [
             VerbGroup(Verb('go'), BasicWord.preposition('with'), BasicWord.particle('away'), 1),
             VerbGroup(Verb('eat'), None, None, 1)
@@ -26,8 +29,8 @@ class DummyWordLists(object):
 
 
 class TestParagraphsGenerator(unittest.TestCase):
-    def test_init(self):
-        config_state = {
+    def setUp(self):
+        self.config_state = {
             'error_probability': 1.0,
             'noun_errors': True,
             'pronoun_errors': True,
@@ -42,29 +45,60 @@ class TestParagraphsGenerator(unittest.TestCase):
             'probability_pronoun': 1.0,
 
             'paragraph_type': 'chain',
-            'subject_pool': 5,
-            'num_paragraphs': 5,
-            'paragraph_size': 5,
+            'subject_pool': 1,
+            'paragraph_size': 1,
         }
+
+    def test_init(self):
         dummy_word_lists = DummyWordLists()
 
-        to_test = ParagraphsGenerator(config_state, dummy_word_lists)
-        for key, value in config_state.items():
+        to_test = ParagraphsGenerator(self.config_state, dummy_word_lists)
+        for key, value in self.config_state.items():
             self.assertEqual(to_test.get(key), value)
 
-        self.assertEqual(to_test.get_nouns(), dummy_word_lists.nouns())
-        self.assertEqual(to_test.get_verbs(), dummy_word_lists.verbs())
+        self.assertEqual(to_test.get_nouns(), dummy_word_lists.nouns)
+        self.assertEqual(to_test.get_verbs(), dummy_word_lists.verbs)
+
+    def test_generate_paragraphs_paragraph_size(self):
+        for paragraph_size in range(1, 5):
+            self.config_state.update({'paragraph_size': paragraph_size})
+            answer, error = ParagraphsGenerator(self.config_state, DummyWordLists()).generate_paragraphs()
+            self.assertEqual(len(answer), paragraph_size)
+            self.assertEqual(len(error), paragraph_size)
+
+    def test_generate_paragraphs_probability_pronouns_zero(self):
+        test_config = {
+            'probability_pronoun': 0.0,
+        }
+        self.config_state.update(test_config)
+        to_test = ParagraphsGenerator(self.config_state, DummyWordLists())
+        answer, error = to_test.generate_paragraphs()
+        for _, _, word in answer.indexed_all_words():
+            self.assertNotIsInstance(word, AbstractPronoun)
+        for _, _, word in error.indexed_all_words():
+            self.assertNotIsInstance(word, AbstractPronoun)
+
+    def test_generate_paragraphs_probability_pronouns_one(self):
+        self.config_state.update({'probability_pronoun': 1.0})
+        answer, error = ParagraphsGenerator(self.config_state, DummyWordLists()).generate_paragraphs()
+        for _, w_index, word in answer.indexed_all_words():
+            expected = (AbstractPronoun, Verb, BasicWord, Punctuation)
+            if w_index == 0:
+                self.assertIsInstance(word, AbstractPronoun)
+            else:
+                self.assertIsInstance(word, expected)
+        for _, w_index, word in error.indexed_all_words():
+            expected = (AbstractPronoun, Verb, BasicWord, Punctuation)
+            if w_index == 0:
+                self.assertIsInstance(word, AbstractPronoun)
+            else:
+                self.assertIsInstance(word, expected)
 
 
 class ParagraphsGenerator(object):
     def __init__(self, config_state, word_lists_generator):
         """
         :config_state required keys:
-        - 'countable_nouns'
-        - 'uncountable_nouns'
-        - 'proper_nouns'
-        - 'verbs'
-
         - 'error_probability'
         - 'noun_errors'
         - 'pronoun_errors'
@@ -91,10 +125,18 @@ class ParagraphsGenerator(object):
         return self._config[key]
 
     def get_nouns(self):
-        return self._word_list_generator.nouns()
+        return self._word_list_generator.nouns
 
     def get_verbs(self):
-        return self._word_list_generator.verbs()
+        return self._word_list_generator.verbs
+
+    def generate_paragraphs(self):
+        paragraph_size = self.get('paragraph_size')
+        probability_pronoun = self.get('probability_pronoun')
+        generator = RandomParagraph(probability_pronoun, self.get_verbs(), self.get_nouns())
+        random_paragraph = generator.create_chain_paragraph(paragraph_size)
+
+        return random_paragraph, random_paragraph
 
         # self._options = {}
         # self._verbs_list = []

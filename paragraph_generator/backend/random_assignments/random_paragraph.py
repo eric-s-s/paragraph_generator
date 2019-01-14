@@ -1,6 +1,9 @@
 import random
 
 from paragraph_generator.backend.random_assignments.random_sentences import RandomSentences
+from paragraph_generator.tags.status_tag import StatusTag
+from paragraph_generator.tags.tags import Tags
+from paragraph_generator.word_groups.paragraph import Paragraph
 from paragraph_generator.words.noun import Noun
 from paragraph_generator.words.pronoun import Pronoun
 
@@ -9,6 +12,7 @@ class RandomParagraph(object):
     def __init__(self, probability_pronoun, verb_list, noun_list):
         self._p_pronoun = probability_pronoun
         self._word_maker = RandomSentences(verb_list, noun_list)
+        self._raw_tag = Tags([StatusTag.RAW])
 
     def get_subject_pool(self, size):
         pool = []
@@ -27,19 +31,19 @@ class RandomParagraph(object):
     def create_pool_paragraph(self, pool_size, num_sentences):
         subjects = self.get_subject_pool(pool_size)
 
-        paragraph = []
+        sentences = []
         for _ in range(num_sentences):
             subj = random.choice(subjects)
-            paragraph.append(self._word_maker.sentence(subj, self._p_pronoun))
-        return paragraph
+            sentences.append(self._word_maker.sentence(subj, self._p_pronoun))
+        return Paragraph(sentences, self._raw_tag)
 
     def create_chain_paragraph(self, num_sentences):
-        paragraph = []
+        sentences = []
 
         new_subj = self._word_maker.subject(self._p_pronoun)
         for _ in range(num_sentences):
             sentence = self._word_maker.sentence(new_subj, self._p_pronoun)
-            paragraph.append(sentence)
+            sentences.append(sentence)
             subj_candidate = sentence.get(-2)
             if isinstance(subj_candidate, Pronoun):
                 new_subj = subj_candidate.subject()
@@ -48,4 +52,4 @@ class RandomParagraph(object):
             else:
                 new_subj = self._word_maker.subject(self._p_pronoun)
 
-        return paragraph
+        return Paragraph(sentences, self._raw_tag)

@@ -46,6 +46,10 @@ class Paragraph(object):
         return chain.from_iterable(self._sentences)
 
     def indexed_all_words(self):
+        """
+
+        :return: Generator[(s_index, w_index, word)]
+        """
         return ((s_index, w_index, word)
                 for s_index, sentence in enumerate(self._sentences)
                 for w_index, word in enumerate(sentence))
