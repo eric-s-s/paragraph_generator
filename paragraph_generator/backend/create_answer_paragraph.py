@@ -1,3 +1,10 @@
+"""
+When I went back to look on this. I couldn't figure out what it was for. That's a bad bad sign.
+
+This takes an original Paragraph and a submitted answer string. It then generates a new paragraph
+with properly assigned plural nouns. You can then plug that into ParagraphComparison to get a new thing.
+"""
+
 from paragraph_generator.backend.grammarizer import Grammarizer
 from paragraph_generator.backend.random_assignments.plurals_assignement import get_countable_nouns, PluralsAssignment
 from paragraph_generator.tags.status_tag import StatusTag
