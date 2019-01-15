@@ -1,11 +1,11 @@
 import random
 import unittest
-from collections import namedtuple
 
 from paragraph_generator.paragraphsgenerator import ParagraphsGenerator
 from paragraph_generator.tags.status_tag import StatusTag
 from paragraph_generator.tags.wordtag import WordTag
 from paragraph_generator.word_groups.verb_group import VerbGroup
+from paragraph_generator.word_lists_generator import AbstractWordLists
 from paragraph_generator.words.basicword import BasicWord
 from paragraph_generator.words.noun import Noun
 from paragraph_generator.words.pronoun import AbstractPronoun
@@ -30,7 +30,18 @@ def count_nouns_and_pronouns(answer):
     return nouns, pronouns
 
 
-WordLists = namedtuple('WordLists', ['nouns', 'verbs'])
+class DummyWordLists(AbstractWordLists):
+    def __init__(self, nouns, verbs):
+        self._nouns = nouns
+        self._verbs = verbs
+
+    @property
+    def nouns(self):
+        return self._nouns[:]
+
+    @property
+    def verbs(self):
+        return self._verbs[:]
 
 
 class TestParagraphsGenerator(unittest.TestCase):
@@ -61,7 +72,7 @@ class TestParagraphsGenerator(unittest.TestCase):
         self.countable_nouns = [Noun('dog'), Noun('cat')]
         self.uncountable_nouns = [Noun.uncountable_noun('water'), Noun.uncountable_noun('air')]
         self.static_nouns = [Noun.proper_noun('Joe'), Noun.proper_noun('The Dude')]
-        self.word_lists = WordLists(nouns=self.countable_nouns, verbs=self.verbs)
+        self.word_lists = DummyWordLists(nouns=self.countable_nouns, verbs=self.verbs)
 
     def test_init_default_config_state(self):
         default = {
@@ -126,7 +137,7 @@ class TestParagraphsGenerator(unittest.TestCase):
 
     def test_generate_paragraphs_probability_plural_noun_zero(self):
         config = {'probability_pronoun': 0.0, 'paragraph_size': 1, 'probability_plural_noun': 0.0}
-        word_lists = WordLists(self.countable_nouns, self.verbs)
+        word_lists = DummyWordLists(self.countable_nouns, self.verbs)
         to_test = ParagraphsGenerator(config, word_lists)
         answer, error = to_test.generate_paragraphs()
         plural_noun = count_word_tags(answer, WordTag.PLURAL)
@@ -134,7 +145,7 @@ class TestParagraphsGenerator(unittest.TestCase):
 
     def test_generate_paragraphs_probability_plural_noun_one(self):
         config = {'probability_pronoun': 0.0, 'paragraph_size': 1, 'probability_plural_noun': 1.0}
-        word_lists = WordLists(self.countable_nouns, self.verbs)
+        word_lists = DummyWordLists(self.countable_nouns, self.verbs)
         answer, error = ParagraphsGenerator(config, word_lists).generate_paragraphs()
         plural_noun = count_word_tags(answer, WordTag.PLURAL)
         self.assertEqual(plural_noun, 2)
@@ -142,14 +153,14 @@ class TestParagraphsGenerator(unittest.TestCase):
     def test_generate_paragraphs_probability_plural_noun_middle(self):
         random.seed(324870)
         config = {'probability_pronoun': 0.0, 'paragraph_size': 1, 'probability_plural_noun': 0.5}
-        word_lists = WordLists(self.countable_nouns, self.verbs)
+        word_lists = DummyWordLists(self.countable_nouns, self.verbs)
         answer, error = ParagraphsGenerator(config, word_lists).generate_paragraphs()
         plural_noun = count_word_tags(answer, WordTag.PLURAL)
         self.assertEqual(plural_noun, 1)
 
     def test_generate_paragraphs_probability_negative_verb_zero(self):
         config = {'probability_pronoun': 0.0, 'paragraph_size': 4, 'probability_negative_verb': 0.0}
-        word_lists = WordLists(self.countable_nouns, self.verbs)
+        word_lists = DummyWordLists(self.countable_nouns, self.verbs)
         to_test = ParagraphsGenerator(config, word_lists)
         answer, error = to_test.generate_paragraphs()
         negative_verb = count_word_tags(answer, WordTag.NEGATIVE)
@@ -157,7 +168,7 @@ class TestParagraphsGenerator(unittest.TestCase):
 
     def test_generate_paragraphs_probability_negative_verb_one(self):
         config = {'probability_pronoun': 0.0, 'paragraph_size': 4, 'probability_negative_verb': 1.0}
-        word_lists = WordLists(self.countable_nouns, self.verbs)
+        word_lists = DummyWordLists(self.countable_nouns, self.verbs)
         answer, error = ParagraphsGenerator(config, word_lists).generate_paragraphs()
         negative_verb = count_word_tags(answer, WordTag.NEGATIVE)
         self.assertEqual(negative_verb, 4)
@@ -165,7 +176,7 @@ class TestParagraphsGenerator(unittest.TestCase):
     def test_generate_paragraphs_probability_negative_verb_middle(self):
         random.seed(32470)
         config = {'probability_pronoun': 0.0, 'paragraph_size': 4, 'probability_negative_verb': 0.5}
-        word_lists = WordLists(self.countable_nouns, self.verbs)
+        word_lists = DummyWordLists(self.countable_nouns, self.verbs)
         answer, error = ParagraphsGenerator(config, word_lists).generate_paragraphs()
         negative_verb = count_word_tags(answer, WordTag.NEGATIVE)
         self.assertEqual(negative_verb, 2)

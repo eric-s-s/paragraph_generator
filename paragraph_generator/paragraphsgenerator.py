@@ -3,10 +3,11 @@ from paragraph_generator.backend.grammarizer import Grammarizer
 from paragraph_generator.backend.random_assignments.assign_random_negatives import assign_random_negatives
 from paragraph_generator.backend.random_assignments.plurals_assignement import PluralsAssignment
 from paragraph_generator.backend.random_assignments.random_paragraph import RandomParagraph
+from paragraph_generator.word_lists_generator import AbstractWordLists
 
 
 class ParagraphsGenerator(object):
-    def __init__(self, config_state, word_lists_generator):
+    def __init__(self, config_state, word_lists_generator: AbstractWordLists):
         """
         :config_state required keys:
         - 'error_probability'
