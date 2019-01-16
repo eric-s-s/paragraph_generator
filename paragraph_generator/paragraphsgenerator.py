@@ -1,33 +1,36 @@
+from typing import List
+
 from paragraph_generator.backend.error_maker import ErrorMaker
 from paragraph_generator.backend.grammarizer import Grammarizer
 from paragraph_generator.backend.random_assignments.assign_random_negatives import assign_random_negatives
 from paragraph_generator.backend.random_assignments.plurals_assignement import PluralsAssignment
 from paragraph_generator.backend.random_assignments.random_paragraph import RandomParagraph
-from paragraph_generator.word_lists_generator import AbstractWordLists
+from paragraph_generator.word_groups.verb_group import VerbGroup
+from paragraph_generator.word_lists import AbstractWordLists
+from paragraph_generator.words.noun import Noun
 
 
 class ParagraphsGenerator(object):
     def __init__(self, config_state, word_lists_generator: AbstractWordLists):
         """
-        :config_state required keys:
-        - 'error_probability'
-        - 'noun_errors'
-        - 'pronoun_errors'
-        - 'verb_errors'
-        - 'is_do_errors'
-        - 'preposition_transpose_errors'
-        - 'punctuation_errors'
 
+        :config_state optional keys:
+        - 'error_probability': 0.0 <= float <= 1.0
+        - 'noun_errors': 0.0 <= float <= 1.0
+        - 'pronoun_errors': bool
+        - 'verb_errors': bool
+        - 'is_do_errors': bool
+        - 'preposition_transpose_errors': bool
+        - 'punctuation_errors': bool
 
-        - 'tense'
-        - 'probability_plural_noun'
-        - 'probability_negative_verb'
-        - 'probability_pronoun'
+        - 'tense': str - 'simple_past'|'simple_present'
+        - 'probability_plural_noun': 0.0 <= float <= 1.0
+        - 'probability_negative_verb': 0.0 <= float <= 1.0
+        - 'probability_pronoun': 0.0 <= float <= 1.0
 
-        - 'paragraph_type'
-        - 'subject_pool'
-        - 'num_paragraphs'
-        - 'paragraph_size'
+        - 'paragraph_type': str - 'chain'|'pool'
+        - 'subject_pool': 0 < int
+        - 'paragraph_size': 0 < int
         """
         self._config = {
             'error_probability': 0.2,
@@ -54,10 +57,10 @@ class ParagraphsGenerator(object):
     def get(self, key):
         return self._config[key]
 
-    def get_nouns(self):
+    def get_nouns(self) -> List[Noun]:
         return self._word_list_generator.nouns
 
-    def get_verbs(self):
+    def get_verbs(self) -> List[VerbGroup]:
         return self._word_list_generator.verbs
 
     def generate_paragraphs(self):

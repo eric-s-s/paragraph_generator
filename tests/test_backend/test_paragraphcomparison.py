@@ -155,6 +155,20 @@ class TestParagraphComparison(unittest.TestCase):
         }
         self.assertEqual(hints, expected)
 
+    def test_compare_by_words_pronoun_errors_capitalization(self):
+        answer = Paragraph([Sentence([Pronoun.I.capitalize(), Pronoun.THEY.capitalize(), Punctuation.PERIOD])])
+        submission = 'i they.'
+        hint_paragraph = '<bold>i</bold> <bold>they</bold>.'
+
+        comparitor = ParagraphComparison(answer, submission)
+        hints = comparitor.compare_by_words()
+        expected = {
+            'error_count': 2,
+            'hint_paragraph': hint_paragraph,
+            'missing_sentences': 0
+        }
+        self.assertEqual(hints, expected)
+
     def test_compare_by_words_verb_errors(self):
         answer = Paragraph([Sentence([Verb('go', 'went'), Punctuation.PERIOD]),
                             Sentence([Verb('play'), Punctuation.PERIOD])])

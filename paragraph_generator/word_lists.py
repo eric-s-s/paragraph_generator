@@ -1,4 +1,5 @@
 from abc import ABC, abstractmethod
+from typing import List
 
 from paragraph_generator.word_groups.verb_group import VerbGroup
 from paragraph_generator.words.basicword import BasicWord
@@ -9,17 +10,24 @@ from paragraph_generator.words.verb import Verb
 class AbstractWordLists(ABC):
     @property
     @abstractmethod
-    def verbs(self):
+    def verbs(self) -> List[VerbGroup]:
         raise NotImplementedError
 
     @property
     @abstractmethod
-    def nouns(self):
+    def nouns(self) -> List[Noun]:
         raise NotImplementedError
 
 
 class WordLists(object):
     def __init__(self, verbs=None, countable=None, uncountable=None, static=None):
+        """
+
+        :param verbs: {'verb': str, 'irregular_past': str, 'preposition': str, 'particle': str, 'objects': int}
+        :param countable: {'noun': str, 'irregular_past': str}
+        :param uncountable: {'noun': str}
+        :param static: {'noun': str, 'is_plural': bool}
+        """
         self._verbs = verbs if verbs else []
         self._countable = countable if countable else []
         self._uncountable = uncountable if uncountable else []

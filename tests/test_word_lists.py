@@ -1,7 +1,7 @@
 import unittest
 
 from paragraph_generator.word_groups.verb_group import VerbGroup
-from paragraph_generator.word_lists_generator import WordLists
+from paragraph_generator.word_lists import WordLists
 from paragraph_generator.words.basicword import BasicWord
 from paragraph_generator.words.noun import Noun
 from paragraph_generator.words.verb import Verb

@@ -5,7 +5,7 @@ from paragraph_generator.paragraphsgenerator import ParagraphsGenerator
 from paragraph_generator.tags.status_tag import StatusTag
 from paragraph_generator.tags.wordtag import WordTag
 from paragraph_generator.word_groups.verb_group import VerbGroup
-from paragraph_generator.word_lists_generator import AbstractWordLists
+from paragraph_generator.word_lists import AbstractWordLists
 from paragraph_generator.words.basicword import BasicWord
 from paragraph_generator.words.noun import Noun
 from paragraph_generator.words.pronoun import AbstractPronoun
@@ -231,7 +231,7 @@ class TestParagraphsGenerator(unittest.TestCase):
         self.assertEqual(answer.sentence_list(), error.sentence_list())
 
     def test_generate_paragraphs_error_probability_one_all_errors_set_false(self):
-        config = {'error_prbability': 1.0}
+        config = {'error_probability': 1.0}
         errors = {key: False for key in
                   ['noun_errors', 'pronoun_errors', 'verb_errors', 'punctuation_errors', 'is_do_errors',
                    'preposition_transpose_errors']}
