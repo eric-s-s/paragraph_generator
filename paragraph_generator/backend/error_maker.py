@@ -112,11 +112,8 @@ class ErrorMaker(object):
 
     def _recapitalize_first_word_if_original_capitalized(self):
         for s_index, sentence in enumerate(self._error_paragraph):
-            try:
-                test_word = self._paragraph.get_sentence(s_index).get(0)
-                new_word = sentence.get(0)
-            except IndexError:
-                continue
+            test_word = self._paragraph.get_sentence(s_index).get(0)
+            new_word = sentence.get(0)
 
             if test_word.capitalize() == test_word:
                 new_word = new_word.capitalize()

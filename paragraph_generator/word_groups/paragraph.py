@@ -39,7 +39,7 @@ class Paragraph(object):
         return ' '.join((str(sentence) for sentence in self._sentences))
 
     def __repr__(self):
-        # TODO for tests!
+        """PURELY FOR TESTING CONVENIENCE"""
         return 'Paragraph({!r}, {!r})'.format(self.sentence_list(), self.tags)
 
     def all_words(self):

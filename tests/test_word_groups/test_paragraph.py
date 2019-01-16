@@ -83,6 +83,12 @@ class TestParagraph(unittest.TestCase):
         paragraph = Paragraph(sentence_list, tags)
         self.assertEqual(str(paragraph), 'hi there. ho there!')
 
+    def test_repr_used_only_for_testing(self):
+        sentences = [Sentence([BasicWord('x')])]
+        paragraph = Paragraph(sentences)
+        expected = "Paragraph([Sentence([BasicWord('x', Tags([]))])], Tags([]))"
+        self.assertEqual(repr(paragraph), expected)
+
     def test_all_words(self):
         sentence_one = [BasicWord('hi'), BasicWord('there')]
         sentence_two = [BasicWord('ho'), BasicWord('there')]

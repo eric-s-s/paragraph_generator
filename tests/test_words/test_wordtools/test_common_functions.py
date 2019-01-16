@@ -85,6 +85,7 @@ class TestCommonFunctions(unittest.TestCase):
         self.assertTrue('bet')
         self.assertTrue('hop')
         self.assertTrue('cut')
+        self.assertTrue('in')
 
     def test_bold_regular(self):
         self.assertEqual(bold('x'), '<bold>x</bold>')

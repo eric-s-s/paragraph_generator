@@ -44,6 +44,11 @@ class TestSentence(unittest.TestCase):
         sentence = Sentence([BasicWord('I'), Verb('go', irregular_past='went').past_tense(), Punctuation.PERIOD])
         self.assertEqual(str(sentence), 'I went.')
 
+    def test_sentence_repr_FOR_TESTING_CONVENIENCE_ONLY(self):
+        sentence = Sentence([BasicWord('x')])
+        expected = "Sentence([BasicWord('x', Tags([]))])"
+        self.assertEqual(repr(sentence), expected)
+
     def test_sentence_str_complex_case(self):
         sentence = Sentence([
             BasicWord('He'), Verb('go').negative().third_person(), BasicWord('home'), Punctuation.COMMA,

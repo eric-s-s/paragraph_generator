@@ -16,7 +16,7 @@ class Sentence(object):
         self._word_list = word_list.copy()
 
     def __repr__(self):
-        # TODO for tests only
+        """for testing convenience"""
         return 'Sentence({!r})'.format(self.word_list())
 
     def word_list(self):

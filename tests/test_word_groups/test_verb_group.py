@@ -33,3 +33,36 @@ class TestVerbGroup(unittest.TestCase):
         self.assertIsNone(to_test.preposition)
         self.assertIsNone(to_test.particle)
         self.assertEqual(to_test.objects, objects)
+
+    def test_eq_other(self):
+        verb = Verb('go')
+        objects = 1
+        preposition = None
+        particle = BasicWord.particle('x')
+        to_test = VerbGroup(verb, preposition, particle, objects)
+        self.assertNotEqual(to_test, (verb, preposition, particle, objects))
+
+    def test_eq_true(self):
+        verb = Verb('go')
+        objects = 1
+        preposition = None
+        particle = BasicWord.particle('x')
+        to_test = VerbGroup(verb, preposition, particle, objects)
+        self.assertEqual(to_test, VerbGroup(verb, preposition, particle, objects))
+
+    def test_eq_false(self):
+        verb = Verb('go')
+        objects = 1
+        preposition = None
+        particle = BasicWord.particle('x')
+        to_test = VerbGroup(verb, preposition, particle, objects)
+
+        new_verb = Verb('z')
+        new_objects = 2
+        new_preposition = BasicWord.preposition('x')
+        new_particle = BasicWord.particle('y')
+
+        self.assertNotEqual(to_test, VerbGroup(new_verb, preposition, particle, objects))
+        self.assertNotEqual(to_test, VerbGroup(verb, new_preposition, particle, objects))
+        self.assertNotEqual(to_test, VerbGroup(verb, preposition, new_particle, objects))
+        self.assertNotEqual(to_test, VerbGroup(verb, preposition, particle, new_objects))
