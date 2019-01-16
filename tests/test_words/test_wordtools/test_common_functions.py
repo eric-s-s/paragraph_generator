@@ -78,14 +78,14 @@ class TestCommonFunctions(unittest.TestCase):
         self.assertFalse(ends_with_short_vowel_and_consonant('butt'))
 
     def test_ends_with_short_vowel_and_consonant_true(self):
-        self.assertTrue('bit')
-        self.assertTrue('habit')
-        self.assertTrue('rabbit')
-        self.assertTrue('bat')
-        self.assertTrue('bet')
-        self.assertTrue('hop')
-        self.assertTrue('cut')
-        self.assertTrue('in')
+        self.assertTrue(ends_with_short_vowel_and_consonant('bit'))
+        self.assertTrue(ends_with_short_vowel_and_consonant('habit'))
+        self.assertTrue(ends_with_short_vowel_and_consonant('rabbit'))
+        self.assertTrue(ends_with_short_vowel_and_consonant('bat'))
+        self.assertTrue(ends_with_short_vowel_and_consonant('bet'))
+        self.assertTrue(ends_with_short_vowel_and_consonant('hop'))
+        self.assertTrue(ends_with_short_vowel_and_consonant('cut'))
+        self.assertTrue(ends_with_short_vowel_and_consonant('in'))
 
     def test_bold_regular(self):
         self.assertEqual(bold('x'), '<bold>x</bold>')

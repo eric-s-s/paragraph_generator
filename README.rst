@@ -1,3 +1,10 @@
+.. image:: https://travis-ci.com/eric-s-s/paragraph_generator.svg?branch=master
+    :target: https://travis-ci.com/eric-s-s/paragraph_generator
+
+.. image:: https://coveralls.io/repos/github/eric-s-s/paragraph_generator/badge.svg?branch=master
+    :target: https://coveralls.io/github/eric-s-s/paragraph_generator?branch=master
+
+
 paragraph_generator v1.0
 ========================
 
