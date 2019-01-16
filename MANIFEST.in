@@ -1,5 +1,1 @@
-include *.txt
 include sentences/data/*.csv
-include sentences/data/*.ico
-include sentences/data/*.txt
-include sentences/data/default.cfg

@@ -7,28 +7,23 @@ def readme():
 
 
 setup(name='paragraph_generator',
-      version='4.0',
+      version='1.0',
       description='sentence generator',
       long_description=readme(),
       keywords='',
-      url='http://github.com/eric-s-s/sound_test',
+      url='http://github.com/eric-s-s/paragraph_generator',
       author='Eric Shaw',
       author_email='shaweric01@gmail.com',
       license='MIT',
       classifiers=[
         'Development Status :: 4 - Beta',
-        "Operating System :: Windows",
         'Intended Audience :: Developers',
         'Programming Language :: Python',
         'Programming Language :: Python :: 3',
       ],
       packages=find_packages(include=['paragraph_generator.*', 'paragraph_generator']),
-      entry_points={
-          'console_scripts': ['gen_pdf = paragraph_generator.guimain:main_app'],
-      },
       package_data={
-          '': ['data/*.csv', 'data/default.cfg', 'data/*.txt', 'data/*.ico']
+          '': ['data/*.csv']
       },
-      install_requires=['reportlab'],
       include_package_data=True,
       zip_safe=False)

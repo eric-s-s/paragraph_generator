@@ -1,12 +1,17 @@
 paragraph_generator v1.0
 ========================
 
+A micro-service component for an English Language Learners website
+------------------------------------------------------------------
 
-THIS IS SOMEWHAT INVALID README. WORK IN PROGRESS
--------------------------------------------------
+This is the basic back-end entry points for a service that creates a paragraph with
+specific kinds of errors for ELL students (especially Mandarin Chinese speakers) to practice
+basic proof reading. It is installable using pip and provides objects and functions for
+generating jsons and python objects. This should then be easy to plug into almost any
+server.
 
-This module creates randomly generated paragraphs and then assigns specific kinds of errors to those paragraphs.
-It outputs this text to a pdf file. To install and run:
+
+To install:
 
 .. code-block:: bash
 
@@ -15,17 +20,8 @@ It outputs this text to a pdf file. To install and run:
     $ python setup.py install  # or pip install .
     $ gen_pdf
 
-To create an msi or dmg file:
 
-.. code-block:: bash
 
-    $ python setup_cx_freeze.py bdist_msi  # or bdist_mac
-
-**note:** There is an issue with creating a shortcut. See details `here
-<https://stackoverflow.com/questions/24195311/how-to-set-shortcut-working-directory-in-cx-freeze-msi-bundle>`_.
-
-**note:** The `.msi` file does not seem to do updates. Each separate version of the program must be uninstalled before
-the new one can be installed.
 
 GUI options details:
 --------------------
