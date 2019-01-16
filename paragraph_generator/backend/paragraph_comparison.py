@@ -7,6 +7,7 @@ from paragraph_generator.word_groups.paragraph import Paragraph
 from paragraph_generator.word_groups.sentence import Sentence
 from paragraph_generator.words.basicword import BasicWord
 from paragraph_generator.words.noun import Noun
+from paragraph_generator.words.pronoun import AbstractPronoun
 from paragraph_generator.words.punctuation import Punctuation
 from paragraph_generator.words.verb import Verb
 from paragraph_generator.words.wordtools.abstractword import AbstractWord
@@ -174,6 +175,8 @@ def find_word_group(word, submission_str):
         return find_noun_group(word, submission_str)
     elif isinstance(word, Verb):
         return find_verb_group(word, submission_str)
+    elif isinstance(word, AbstractPronoun):
+        return find_pronoun(word, submission_str)
     else:
         return find_word(word, submission_str)
 
@@ -212,6 +215,16 @@ def find_verb_group(word: Verb, submission_str):
     word_regex = f'({base_regex}|{plural_regex}|{past_regex})'
 
     return _find_from_regex(prefix_regex, word_regex, submission_str)
+
+
+def find_pronoun(pronoun: AbstractPronoun, submission_str: str):
+    subject_lower = pronoun.subject().value.lower()
+    object_lower = pronoun.object().value.lower()
+    subject_upper = subject_lower.capitalize()
+    object_upper = object_lower.capitalize()
+    word_regex = f'({subject_lower}|{subject_upper}|{object_lower}|{object_upper})'
+    answer = re.search(r'\b{}\b'.format(word_regex), submission_str)
+    return answer.span() if answer is not None else answer
 
 
 def find_word(word: AbstractWord, submission_str):

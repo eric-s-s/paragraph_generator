@@ -3,7 +3,7 @@ import unittest
 from paragraph_generator.backend.paragraph_comparison import (
     ParagraphComparison, find_noun_group, find_verb_group, find_word,
     find_word_group, compare_sentences,
-    get_word_locations, filter_locations, get_word, get_punctuation)
+    get_word_locations, filter_locations, get_word, get_punctuation, find_pronoun)
 from paragraph_generator.word_groups.paragraph import Paragraph
 from paragraph_generator.word_groups.sentence import Sentence
 from paragraph_generator.words.basicword import BasicWord
@@ -159,6 +159,20 @@ class TestParagraphComparison(unittest.TestCase):
         answer = Paragraph([Sentence([Pronoun.I.capitalize(), Pronoun.THEY.capitalize(), Punctuation.PERIOD])])
         submission = 'i they.'
         hint_paragraph = '<bold>i</bold> <bold>they</bold>.'
+
+        comparitor = ParagraphComparison(answer, submission)
+        hints = comparitor.compare_by_words()
+        expected = {
+            'error_count': 2,
+            'hint_paragraph': hint_paragraph,
+            'missing_sentences': 0
+        }
+        self.assertEqual(hints, expected)
+
+    def test_compare_by_words_pronoun_errors_subject_object(self):
+        answer = Paragraph([Sentence([Pronoun.I.capitalize(), Pronoun.ME, Punctuation.PERIOD])])
+        submission = 'Me I.'
+        hint_paragraph = '<bold>Me</bold> <bold>I</bold>.'
 
         comparitor = ParagraphComparison(answer, submission)
         hints = comparitor.compare_by_words()
@@ -373,6 +387,41 @@ class TestParagraphComparisonHelperFunctions(unittest.TestCase):
         end = start + len('the feets')
         self.assertEqual(answer, (start, end))
 
+    def test_find_pronoun_exact_match(self):
+        template = '{} do.'
+        for pronoun in Pronoun:
+            capital = pronoun.capitalize()
+            submission_str = template.format(pronoun.value)
+            capital_submission_str = template.format(capital.value)
+            expected = (0, len(pronoun.value))
+            self.assertEqual(find_pronoun(pronoun, submission_str), expected)
+            self.assertEqual(find_pronoun(capital, capital_submission_str), expected)
+
+    def test_find_pronoun_capital_submission_str_lower(self):
+        template = '{} do.'
+        for pronoun in Pronoun:
+            submission_str = template.format(pronoun.value.lower())
+            expected = (0, len(pronoun.value))
+            self.assertEqual(find_pronoun(pronoun.capitalize(), submission_str), expected)
+
+    def test_find_pronoun_capital_submission_str_capitalized(self):
+        template = '{} do.'
+        for pronoun in Pronoun:
+            submission_str = template.format(pronoun.value.capitalize())
+            expected = (0, len(pronoun.value))
+            self.assertEqual(find_pronoun(pronoun, submission_str), expected)
+
+    def test_find_pronoun_object_vs_subject(self):
+        template = '{} do.'
+        for pronoun in Pronoun:
+            obj_str = pronoun.object().value
+            expected = (0, len(obj_str))
+            self.assertEqual(find_pronoun(pronoun.subject(), template.format(obj_str)), expected)
+
+            subj_str = pronoun.subject().value
+            expected = (0, len(subj_str))
+            self.assertEqual(find_pronoun(pronoun.object(), template.format(subj_str)), expected)
+
     def test_find_verb_group_verb_not_present(self):
         submission_str = ''
         verb = Verb('play')
@@ -466,6 +515,13 @@ class TestParagraphComparisonHelperFunctions(unittest.TestCase):
         submission_str = 'The dogs fly.'
         answer = find_word_group(word, submission_str)
         expected = (0, len('the dogs'))
+        self.assertEqual(answer, expected)
+
+    def test_find_word_group_pronoun(self):
+        word = Pronoun.I
+        submission_str = 'i am.'
+        answer = find_word_group(word, submission_str)
+        expected = (0, 1)
         self.assertEqual(answer, expected)
 
     def test_find_word_group_verb(self):

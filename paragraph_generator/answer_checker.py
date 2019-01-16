@@ -51,7 +51,7 @@ class AnswerChecker(object):
     def get_word_hints(self):
         """
 
-        :return: {'error_count': int, 'hint_paragraph': str, 'missing_words': int}
+        :return: {'error_count': int, 'hint_paragraph': str, 'missing_sentences': int}
         """
         return self._get_comparitor().compare_by_words()
 
@@ -146,6 +146,6 @@ class TestAnswerChecker(unittest.TestCase):
         expected = {
             'error_count': 2,
             'hint_paragraph': '<bold>Me</bold> <bold>liked</bold> squirrels! The squirrels like me.',
-            'missing_words': 0,
+            'missing_sentences': 0,
         }
         self.assertEqual(checker.get_word_hints(), expected)
