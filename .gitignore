@@ -6,3 +6,4 @@ pdfs/
 sentences/data/config.cfg
 sentences.egg-info/
 venv/
+build_env/

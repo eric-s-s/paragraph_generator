@@ -16,12 +16,13 @@ setup(name='paragraph_generator',
       author_email='shaweric01@gmail.com',
       license='MIT',
       classifiers=[
-        'Development Status :: 4 - Beta',
-        'Intended Audience :: Developers',
-        'Programming Language :: Python',
-        'Programming Language :: Python :: 3',
+          'Development Status :: 4 - Beta',
+          'Intended Audience :: Developers',
+          'Programming Language :: Python',
+          'Programming Language :: Python :: 3.6',
+          'Programming Language :: Python :: 3.7',
       ],
-      packages=find_packages(include=['paragraph_generator.*', 'paragraph_generator']),
+      packages=find_packages(exclude=['tests']),
       package_data={
           '': ['data/*.csv']
       },
