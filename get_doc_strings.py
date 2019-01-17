@@ -4,14 +4,14 @@ TAB = '    '
 
 
 def get_init_docs(class_):
-    class_heading = f"\nclass: {class_.__name__}\n{TAB}__init__\n"
+    class_heading = f"\n:class: {class_.__name__}\n\n{TAB}:method __init__:\n"
     types = get_types(class_.__init__)
     docs = get_docs(class_.__init__)
     if types:
-        class_heading += f'{TAB}{TAB}types: {types}\n'
+        class_heading += f'{TAB}{TAB}:types: {types}\n'
 
     if docs:
-        class_heading += f'{TAB}{TAB}docs: {docs}\n'
+        class_heading += f'{TAB}{TAB}:docs: {docs}\n'
     else:
         class_heading += '\n'
 
@@ -23,13 +23,13 @@ def get_method_docs(class_):
     for method_name in dir(class_):
         if not method_name.startswith('_'):
             method = getattr(class_, method_name)
-            rst_doc = f'{TAB}method: {method_name}\n'
+            rst_doc = f'{TAB}:method {method_name}:\n'
             types = get_types(method)
             docs = get_docs(method)
             if types:
-                rst_doc += f'{TAB}{TAB}types: {types}\n'
+                rst_doc += f'{TAB}{TAB}:types: {types}\n'
             if docs:
-                rst_doc += f'{TAB}{TAB}docs: {docs}\n'
+                rst_doc += f'{TAB}{TAB}:docs: {docs}\n'
             methods.append(rst_doc)
     return '\n'.join(methods)
 
@@ -59,12 +59,13 @@ def insert_docs():
 
     block_statement = '\n\n'.join(doc_strs)
     block_statement = block_statement.replace('\n', f'\n{TAB}')
-    replace_str = 'Basic Documentation:\n--------------------\n::\n\n' + block_statement
+    replace_str = 'Basic Documentation:\n--------------------\n\n' + block_statement
 
     with open('README.rst', 'r') as f:
         text = f.read()
 
     new_text = text[:text.find('Basic Documentation')] + replace_str
+    # print(new_text)
 
     with open('README.rst', 'w') as f:
         f.write(new_text)

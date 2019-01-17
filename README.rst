@@ -36,61 +36,64 @@ or:
 
 Basic Documentation:
 --------------------
-::
 
 
-    class: AnswerChecker
-        __init__
-            types: {'submission': <class 'str'>, 'original': <class 'paragraph_generator.word_groups.paragraph.Paragraph'>}
+    :class: AnswerChecker
     
-        method: count_sentence_errors
-            types: {'return': <class 'int'>}
+        :method __init__:
+            :types: {'submission': <class 'str'>, 'original': <class 'paragraph_generator.word_groups.paragraph.Paragraph'>}
     
-        method: count_word_errors
-            types: {'return': <class 'int'>}
+        :method count_sentence_errors:
+            :types: {'return': <class 'int'>}
     
-        method: get_sentence_hints
-            docs: 
+        :method count_word_errors:
+            :types: {'return': <class 'int'>}
+    
+        :method get_sentence_hints:
+            :docs: 
     
             :return: {'error_count': int, 'hint_paragraph': str, 'missing_sentences': int}
             
     
-        method: get_word_hints
-            docs: 
+        :method get_word_hints:
+            :docs: 
     
             :return: {'error_count': int, 'hint_paragraph': str, 'missing_sentences': int}
             
     
-        method: is_submission_correct
-            types: {'return': <class 'bool'>}
+        :method is_submission_correct:
+            :types: {'return': <class 'bool'>}
     
-        method: original
+        :method original:
     
-        method: submission
+        :method submission:
     
     
     
-    class: WordLists
-        __init__
-            docs: 
+    :class: WordLists
+    
+        :method __init__:
+            :docs: 
     
             :param verbs: {'verb': str, 'irregular_past': str, 'preposition': str, 'particle': str, 'objects': int}
             :param countable: {'noun': str, 'irregular_past': str}
             :param uncountable: {'noun': str}
             :param static: {'noun': str, 'is_plural': bool}
             
-        method: nouns
+        :method nouns:
     
-        method: verbs
+        :method verbs:
     
     
     
-    class: ParagraphsGenerator
-        __init__
-            types: {'word_lists_generator': <class 'paragraph_generator.word_lists.AbstractWordLists'>}
-            docs: 
+    :class: ParagraphsGenerator
     
-            :config_state optional keys:
+        :method __init__:
+            :types: {'word_lists_generator': <class 'paragraph_generator.word_lists.AbstractWordLists'>}
+            :docs: 
+    
+            config_state optional keys:
+    
             - 'error_probability': 0.0 <= float <= 1.0
             - 'noun_errors': 0.0 <= float <= 1.0
             - 'pronoun_errors': bool
@@ -98,23 +101,23 @@ Basic Documentation:
             - 'is_do_errors': bool
             - 'preposition_transpose_errors': bool
             - 'punctuation_errors': bool
-    
+            -
             - 'tense': str - 'simple_past'|'simple_present'
             - 'probability_plural_noun': 0.0 <= float <= 1.0
             - 'probability_negative_verb': 0.0 <= float <= 1.0
             - 'probability_pronoun': 0.0 <= float <= 1.0
-    
+            -
             - 'paragraph_type': str - 'chain'|'pool'
             - 'subject_pool': 0 < int
             - 'paragraph_size': 0 < int
             
-        method: generate_paragraphs
+        :method generate_paragraphs:
     
-        method: get
+        :method get:
     
-        method: get_nouns
-            types: {'return': typing.List[paragraph_generator.words.noun.Noun]}
+        :method get_nouns:
+            :types: {'return': typing.List[paragraph_generator.words.noun.Noun]}
     
-        method: get_verbs
-            types: {'return': typing.List[paragraph_generator.word_groups.verb_group.VerbGroup]}
+        :method get_verbs:
+            :types: {'return': typing.List[paragraph_generator.word_groups.verb_group.VerbGroup]}
     

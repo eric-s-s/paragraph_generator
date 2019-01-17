@@ -14,7 +14,8 @@ class ParagraphsGenerator(object):
     def __init__(self, config_state, word_lists_generator: AbstractWordLists):
         """
 
-        :config_state optional keys:
+        config_state optional keys:
+
         - 'error_probability': 0.0 <= float <= 1.0
         - 'noun_errors': 0.0 <= float <= 1.0
         - 'pronoun_errors': bool
@@ -22,12 +23,12 @@ class ParagraphsGenerator(object):
         - 'is_do_errors': bool
         - 'preposition_transpose_errors': bool
         - 'punctuation_errors': bool
-
+        -
         - 'tense': str - 'simple_past'|'simple_present'
         - 'probability_plural_noun': 0.0 <= float <= 1.0
         - 'probability_negative_verb': 0.0 <= float <= 1.0
         - 'probability_pronoun': 0.0 <= float <= 1.0
-
+        -
         - 'paragraph_type': str - 'chain'|'pool'
         - 'subject_pool': 0 < int
         - 'paragraph_size': 0 < int
