@@ -1,4 +1,4 @@
-from typing import List
+from typing import List, Tuple
 
 from paragraph_generator.backend.error_maker import ErrorMaker
 from paragraph_generator.backend.grammarizer import Grammarizer
@@ -6,6 +6,7 @@ from paragraph_generator.backend.random_assignments.assign_random_negatives impo
 from paragraph_generator.backend.random_assignments.plurals_assignement import PluralsAssignment
 from paragraph_generator.backend.random_assignments.random_paragraph import RandomParagraph
 from paragraph_generator.word_groups.verb_group import VerbGroup
+from paragraph_generator.word_groups.paragraph import Paragraph
 from paragraph_generator.word_lists import AbstractWordLists
 from paragraph_generator.words.noun import Noun
 
@@ -64,7 +65,11 @@ class ParagraphsGenerator(object):
     def get_verbs(self) -> List[VerbGroup]:
         return self._word_list_generator.verbs
 
-    def generate_paragraphs(self):
+    def generate_paragraphs(self) -> Tuple[Paragraph, Paragraph]:
+        """
+
+        :return: answer, error
+        """
         paragraph_size = self.get('paragraph_size')
         probability_pronoun = self.get('probability_pronoun')
         generator = RandomParagraph(probability_pronoun, self.get_verbs(), self.get_nouns())

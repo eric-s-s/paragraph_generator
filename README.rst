@@ -5,7 +5,7 @@
     :target: https://coveralls.io/github/eric-s-s/paragraph_generator?branch=master
 
 
-paragraph_generator v2.2
+paragraph_generator v2.3
 ========================
 
 A micro-service component for an English Language Learners website
@@ -114,6 +114,11 @@ Basic Documentation:
             
     
         :method generate_paragraphs:
+            :types: {'return': typing.Tuple[paragraph_generator.word_groups.paragraph.Paragraph, paragraph_generator.word_groups.paragraph.Paragraph]}
+            :docs: 
+    
+            :return: answer, error
+            
     
         :method get:
     
