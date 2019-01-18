@@ -24,7 +24,7 @@ class WordLists(object):
         """
 
         :param verbs: {'verb': str, 'irregular_past': str, 'preposition': str, 'particle': str, 'objects': int}
-        :param countable: {'noun': str, 'irregular_past': str}
+        :param countable: {'noun': str, 'irregular_plural': str}
         :param uncountable: {'noun': str}
         :param static: {'noun': str, 'is_plural': bool}
         """

@@ -5,7 +5,7 @@
     :target: https://coveralls.io/github/eric-s-s/paragraph_generator?branch=master
 
 
-paragraph_generator v2.0
+paragraph_generator v2.1
 ========================
 
 A micro-service component for an English Language Learners website
@@ -76,7 +76,7 @@ Basic Documentation:
             :docs: 
     
             :param verbs: {'verb': str, 'irregular_past': str, 'preposition': str, 'particle': str, 'objects': int}
-            :param countable: {'noun': str, 'irregular_past': str}
+            :param countable: {'noun': str, 'irregular_plural': str}
             :param uncountable: {'noun': str}
             :param static: {'noun': str, 'is_plural': bool}
             
