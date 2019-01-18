@@ -1,7 +1,7 @@
 import unittest
 
 from paragraph_generator.word_groups.verb_group import VerbGroup
-from paragraph_generator.word_lists import WordLists
+from paragraph_generator.word_lists import WordLists, AbstractWordLists
 from paragraph_generator.words.basicword import BasicWord
 from paragraph_generator.words.noun import Noun
 from paragraph_generator.words.verb import Verb
@@ -12,6 +12,9 @@ class TestWordLists(unittest.TestCase):
         for el in first:
             self.assertIn(el, second)
         self.assertEqual(len(first), len(second))
+
+    def test_regression_test_isinstance_AbstractWordList(self):
+        self.assertIsInstance(WordLists(), AbstractWordLists)
 
     def test_init_empty(self):
         lists = WordLists()

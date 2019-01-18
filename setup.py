@@ -6,7 +6,7 @@ def readme():
         return f.read()
 
 
-VERSION = '2.1'
+VERSION = '2.2'
 
 setup(name='paragraph_generator',
       version=VERSION,

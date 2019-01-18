@@ -19,7 +19,7 @@ class AbstractWordLists(ABC):
         raise NotImplementedError
 
 
-class WordLists(object):
+class WordLists(AbstractWordLists):
     def __init__(self, verbs=None, countable=None, uncountable=None, static=None):
         """
 
