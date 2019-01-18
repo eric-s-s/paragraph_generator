@@ -13,3 +13,4 @@ from paragraph_generator.words.pronoun import AbstractPronoun, Pronoun, CapitalP
 from paragraph_generator.words.punctuation import Punctuation
 from paragraph_generator.words.verb import Verb
 from paragraph_generator.words.wordtools.abstractword import AbstractWord
+from paragraph_generator.words.noun import Noun

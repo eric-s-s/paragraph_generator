@@ -5,7 +5,7 @@
     :target: https://coveralls.io/github/eric-s-s/paragraph_generator?branch=master
 
 
-paragraph_generator v1.0
+paragraph_generator v1.1
 ========================
 
 A micro-service component for an English Language Learners website

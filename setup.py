@@ -6,8 +6,10 @@ def readme():
         return f.read()
 
 
+VERSION = '1.1'
+
 setup(name='paragraph_generator',
-      version='1.0',
+      version=VERSION,
       description='sentence generator',
       long_description=readme(),
       keywords='',

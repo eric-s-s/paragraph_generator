@@ -1,6 +1,22 @@
+import re
+
 from paragraph_generator import AnswerChecker, WordLists, ParagraphsGenerator
 
 TAB = '    '
+
+
+def get_version():
+    with open('setup.py', 'r') as f:
+        text = f.read()
+    return re.search(r"(?<=VERSION = ')[0-9.]+", text).group()
+
+
+def set_version():
+    with open('README.rst', 'r') as f:
+        readme_text = f.read()
+    new_text = re.sub(r"(?<=paragraph_generator v)[0-9.]+", get_version(), readme_text)
+    with open('README.rst', 'w') as f:
+        f.write(new_text)
 
 
 def get_init_docs(class_):
@@ -71,4 +87,5 @@ def insert_docs():
         f.write(new_text)
 
 
+set_version()
 insert_docs()
