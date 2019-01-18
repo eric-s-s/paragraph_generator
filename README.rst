@@ -5,7 +5,7 @@
     :target: https://coveralls.io/github/eric-s-s/paragraph_generator?branch=master
 
 
-paragraph_generator v1.1
+paragraph_generator v2.0
 ========================
 
 A micro-service component for an English Language Learners website
@@ -80,6 +80,7 @@ Basic Documentation:
             :param uncountable: {'noun': str}
             :param static: {'noun': str, 'is_plural': bool}
             
+    
         :method nouns:
     
         :method verbs:
@@ -111,6 +112,7 @@ Basic Documentation:
             - 'subject_pool': 0 < int
             - 'paragraph_size': 0 < int
             
+    
         :method generate_paragraphs:
     
         :method get:
@@ -120,4 +122,19 @@ Basic Documentation:
     
         :method get_verbs:
             :types: {'return': typing.List[paragraph_generator.word_groups.verb_group.VerbGroup]}
+    
+    
+    
+    :class: Serializer
+    
+        :method __init__:
+            :docs: No __init__ method. All methods are class methods or static methods
+    
+        :method from_json:
+    
+        :method to_dict:
+    
+        :method to_json:
+    
+        :method to_obj:
     

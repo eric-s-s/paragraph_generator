@@ -1,6 +1,6 @@
 import re
 
-from paragraph_generator import AnswerChecker, WordLists, ParagraphsGenerator
+from paragraph_generator import AnswerChecker, WordLists, ParagraphsGenerator, Serializer
 
 TAB = '    '
 
@@ -19,29 +19,21 @@ def set_version():
         f.write(new_text)
 
 
-def get_init_docs(class_):
-    class_heading = f"\n:class: {class_.__name__}\n\n{TAB}:method __init__:\n"
-    types = get_types(class_.__init__)
-    docs = get_docs(class_.__init__)
-    if types:
-        class_heading += f'{TAB}{TAB}:types: {types}\n'
-
-    if docs:
-        class_heading += f'{TAB}{TAB}:docs: {docs}\n'
-    else:
-        class_heading += '\n'
-
-    return class_heading
+def get_class_heading(class_):
+    return f"\n:class: {class_.__name__}\n\n"
 
 
 def get_method_docs(class_):
     methods = []
     for method_name in dir(class_):
-        if not method_name.startswith('_'):
+        if method_name == '__init__' or not method_name.startswith('_'):
             method = getattr(class_, method_name)
             rst_doc = f'{TAB}:method {method_name}:\n'
             types = get_types(method)
             docs = get_docs(method)
+            if method_name == '__init__' and docs and 'Initialize self.  See help(type(self))' in docs:
+                docs = "No __init__ method. All methods are class methods or static methods"
+
             if types:
                 rst_doc += f'{TAB}{TAB}:types: {types}\n'
             if docs:
@@ -67,10 +59,10 @@ def get_documentation(method, type_str):
 
 
 def insert_docs():
-    classes = (AnswerChecker, WordLists, ParagraphsGenerator)
+    classes = (AnswerChecker, WordLists, ParagraphsGenerator, Serializer)
     doc_strs = []
     for el in classes:
-        doc_str = get_init_docs(el) + get_method_docs(el)
+        doc_str = get_class_heading(el) + get_method_docs(el)
         doc_strs.append(doc_str)
 
     block_statement = '\n\n'.join(doc_strs)
