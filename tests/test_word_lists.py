@@ -46,10 +46,10 @@ class TestWordLists(unittest.TestCase):
         self.assertEqual(lists.verbs, [])
 
     def test_init_uncountable_nouns(self):
-        uncountable_nouns = [{'noun': 'water'}, {'noun': 'air'}]
+        uncountable_nouns = [{'noun': 'water', 'definite': True}, {'noun': 'air', 'definite': False}]
 
         lists = WordLists(uncountable=uncountable_nouns)
-        expected = [Noun.uncountable_noun('water'), Noun.uncountable_noun('air')]
+        expected = [Noun.uncountable_noun('water').definite(), Noun.uncountable_noun('air')]
         self.assert_unordered_lists(lists.nouns, expected)
         self.assertEqual(lists.verbs, [])
 
@@ -66,7 +66,7 @@ class TestWordLists(unittest.TestCase):
     def test_init_all_types(self):
         verbs = [{'verb': 'play', 'irregular_past': '', 'preposition': '', 'particle': '', 'objects': 1}]
         countable = [{'noun': 'dog', 'irregular_plural': ''}]
-        uncountable = [{'noun': 'water'}]
+        uncountable = [{'noun': 'water', 'definite': False}]
         static = [{'noun': 'Joe', 'is_plural': False}]
 
         lists = WordLists(verbs=verbs, countable=countable, uncountable=uncountable, static=static)

@@ -36,9 +36,9 @@ class TestParagraphComparison(unittest.TestCase):
 
     def test_compare_by_sentence_one_sentence_different_by_internals(self):
         answer = Paragraph([Sentence([BasicWord('Hello'), Punctuation.PERIOD]),
-                            Sentence([BasicWord('I'), BasicWord('am'), BasicWord('man'), Punctuation.EXCLAMATION])])
-        submission = 'Hello. I am man.'
-        hint_paragraph = 'Hello. <bold>I am man.</bold>'
+                            Sentence([BasicWord('I'), BasicWord('am'), BasicWord('man'), Punctuation.PERIOD])])
+        submission = 'Hello. I am mans.'
+        hint_paragraph = 'Hello. <bold>I am mans.</bold>'
 
         comparitor = ParagraphComparison(answer, submission)
         hints = comparitor.compare_by_sentences()
@@ -76,6 +76,34 @@ class TestParagraphComparison(unittest.TestCase):
         expected = {
             'error_count': 3,
             'hint_paragraph': hint_paragraph,
+            'missing_sentences': 0
+        }
+        self.assertEqual(hints, expected)
+
+    def test_compare_by_sentence_allows_periods_to_replace_exclamation_points(self):
+        answer = Paragraph([Sentence([BasicWord('a'), Punctuation.PERIOD]),
+                            Sentence([BasicWord('b'), Punctuation.PERIOD])])
+        submission = 'a! b!'
+
+        comparitor = ParagraphComparison(answer, submission)
+        hints = comparitor.compare_by_sentences()
+        expected = {
+            'error_count': 0,
+            'hint_paragraph': submission,
+            'missing_sentences': 0
+        }
+        self.assertEqual(hints, expected)
+
+    def test_compare_by_sentence_allows_exclamation_points_to_replace_periods(self):
+        answer = Paragraph([Sentence([BasicWord('a'), Punctuation.EXCLAMATION]),
+                            Sentence([BasicWord('b'), Punctuation.EXCLAMATION])])
+        submission = 'a. b.'
+
+        comparitor = ParagraphComparison(answer, submission)
+        hints = comparitor.compare_by_sentences()
+        expected = {
+            'error_count': 0,
+            'hint_paragraph': submission,
             'missing_sentences': 0
         }
         self.assertEqual(hints, expected)
@@ -201,14 +229,30 @@ class TestParagraphComparison(unittest.TestCase):
     def test_compare_by_words_punctuation_errors(self):
         answer = Paragraph([Sentence([Verb('go', 'went'), Punctuation.PERIOD]),
                             Sentence([Verb('play'), Punctuation.PERIOD])])
-        submission = "go! play "
-        hint_paragraph = "go<bold>!</bold> play <bold>MISSING</bold>"
+        submission = "go, play "
+        hint_paragraph = "go<bold>,</bold> play <bold>MISSING</bold>"
 
         comparitor = ParagraphComparison(answer, submission)
         hints = comparitor.compare_by_words()
         expected = {
             'error_count': 2,
             'hint_paragraph': hint_paragraph,
+            'missing_sentences': 0
+        }
+        self.assertEqual(hints, expected)
+
+    def test_compare_by_word_punctuation_allows_period_and_exclamation_point_to_be_switched(self):
+        answer = Paragraph([
+            Sentence([Verb('go', 'went'), Punctuation.PERIOD]),
+            Sentence([Verb('go', 'went'), Punctuation.EXCLAMATION])
+        ])
+        submission = "go! go."
+
+        comparitor = ParagraphComparison(answer, submission)
+        hints = comparitor.compare_by_words()
+        expected = {
+            'error_count': 0,
+            'hint_paragraph': submission,
             'missing_sentences': 0
         }
         self.assertEqual(hints, expected)
@@ -597,11 +641,31 @@ class TestParagraphComparisonHelperFunctions(unittest.TestCase):
 
     def test_compare_sentences_punctuation_error(self):
         sentence = Sentence([Verb('go').capitalize(), Punctuation.PERIOD])
+        submission_str = 'Go,'
+        answer = compare_sentences(sentence, submission_str)
+        expected = {
+            'hint_sentence': "Go<bold>,</bold>",
+            'error_count': 1
+        }
+        self.assertEqual(answer, expected)
+
+    def test_compare_sentences_period_can_switch_to_exclamation(self):
+        sentence = Sentence([Verb('go').capitalize(), Punctuation.PERIOD])
         submission_str = 'Go!'
         answer = compare_sentences(sentence, submission_str)
         expected = {
-            'hint_sentence': "Go<bold>!</bold>",
-            'error_count': 1
+            'hint_sentence': 'Go!',
+            'error_count': 0
+        }
+        self.assertEqual(answer, expected)
+
+    def test_compare_sentences_exclamation_can_switch_to_period(self):
+        sentence = Sentence([Verb('go').capitalize(), Punctuation.EXCLAMATION])
+        submission_str = 'Go.'
+        answer = compare_sentences(sentence, submission_str)
+        expected = {
+            'hint_sentence': 'Go.',
+            'error_count': 0
         }
         self.assertEqual(answer, expected)
 

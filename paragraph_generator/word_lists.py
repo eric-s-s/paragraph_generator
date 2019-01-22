@@ -25,7 +25,7 @@ class WordLists(AbstractWordLists):
 
         :param verbs: {'verb': str, 'irregular_past': str, 'preposition': str, 'particle': str, 'objects': int}
         :param countable: {'noun': str, 'irregular_plural': str}
-        :param uncountable: {'noun': str}
+        :param uncountable: {'noun': str, 'definite': bool}
         :param static: {'noun': str, 'is_plural': bool}
         """
         self._verbs = verbs if verbs else []
@@ -48,7 +48,7 @@ class WordLists(AbstractWordLists):
         return [Noun(el['noun'], irregular_plural=el['irregular_plural']) for el in self._countable]
 
     def _generate_uncountable(self):
-        return [Noun.uncountable_noun(el['noun']) for el in self._uncountable]
+        return [_generate_uncountable_noun(el) for el in self._uncountable]
 
     def _generate_static(self):
         return [Noun.proper_noun(el['noun'], el['is_plural']) for el in self._static]
@@ -71,3 +71,10 @@ def _generate_verb_group(verb_json):
         particle = None
 
     return VerbGroup(verb=verb, objects=objects, preposition=preposition, particle=particle)
+
+
+def _generate_uncountable_noun(uncountable_json):
+    noun = Noun.uncountable_noun(uncountable_json['noun'])
+    if uncountable_json['definite']:
+        noun = noun.definite()
+    return noun

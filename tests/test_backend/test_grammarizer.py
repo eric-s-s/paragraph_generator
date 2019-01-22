@@ -1,5 +1,6 @@
 import unittest
 
+from paragraph_generator import Punctuation
 from paragraph_generator.backend.grammarizer import Grammarizer
 from paragraph_generator.tags.status_tag import StatusTag
 from paragraph_generator.tags.tags import Tags
@@ -103,14 +104,26 @@ class TestGrammarizer(unittest.TestCase):
         self.assertEqual(new_paragraph.sentence_list(), expected)
 
     def test_grammarize_to_present_tense_makes_verb_third_person_when_subject_is_HE_SHE_IT(self):
-        third_person_sentences = [Sentence([Pronoun.HE, Verb('x')]),
-                                  Sentence([Pronoun.SHE, Verb('x').negative()]),
-                                  Sentence([Pronoun.IT, Verb('x')])]
+        third_person_sentences = [
+            Sentence([Pronoun.HE, Verb('x')]),
+            Sentence([Pronoun.SHE, Verb('x').negative()]),
+            Sentence([Pronoun.IT, Verb('x')]),
+
+            Sentence([CapitalPronoun.HE, Verb('x')]),
+            Sentence([CapitalPronoun.SHE, Verb('x').negative()]),
+            Sentence([CapitalPronoun.IT, Verb('x')]),
+        ]
         raw_paragraph = Paragraph(third_person_sentences)
         new_paragraph = Grammarizer(raw_paragraph).grammarize_to_present_tense()
-        expected = [Sentence([CapitalPronoun.HE, Verb('x').third_person()]),
-                    Sentence([CapitalPronoun.SHE, Verb('x').third_person().negative()]),
-                    Sentence([CapitalPronoun.IT, Verb('x').third_person()])]
+        expected = [
+            Sentence([CapitalPronoun.HE, Verb('x').third_person()]),
+            Sentence([CapitalPronoun.SHE, Verb('x').third_person().negative()]),
+            Sentence([CapitalPronoun.IT, Verb('x').third_person()]),
+
+            Sentence([CapitalPronoun.HE, Verb('x').third_person()]),
+            Sentence([CapitalPronoun.SHE, Verb('x').third_person().negative()]),
+            Sentence([CapitalPronoun.IT, Verb('x').third_person()]),
+        ]
         self.assertEqual(new_paragraph.sentence_list(), expected)
 
     def test_grammarize_to_present_tense_does_not_alter_verb_when_subject_is_I_YOU_WE_THEY(self):
@@ -142,6 +155,33 @@ class TestGrammarizer(unittest.TestCase):
                     Sentence([Noun.proper_noun('a').capitalize(), Verb('x').past_tense()]),
                     Sentence([Noun.uncountable_noun('a').capitalize(), Verb('x').past_tense()])]
         self.assertEqual(new_paragraph.sentence_list(), expected)
+
+    def test_grammarizer_on_grammatical_sentence(self):
+        raw = Paragraph([
+            Sentence([
+                CapitalPronoun.HE, Verb('go'), Punctuation.PERIOD
+            ])
+        ], Tags([StatusTag.HAS_NEGATIVES, StatusTag.HAS_PLURALS]))
+        grammatical = Grammarizer(raw).grammarize_to_present_tense()
+        also_grammatical = Grammarizer(grammatical).grammarize_to_present_tense()
+        self.assertNotEqual(raw, grammatical)
+        self.assertEqual(grammatical, also_grammatical)
+
+    def test_regression_test_capital_pronoun_bug(self):
+        raw = Paragraph([
+            Sentence([
+                CapitalPronoun.HE, Verb('go'), Punctuation.PERIOD
+            ])
+        ], Tags([StatusTag.HAS_NEGATIVES, StatusTag.HAS_PLURALS]))
+        grammatical = Grammarizer(raw).grammarize_to_present_tense()
+
+        expected = Paragraph([
+            Sentence([
+                CapitalPronoun.HE, Verb('go').third_person(), Punctuation.PERIOD
+            ])
+        ], Tags([StatusTag.HAS_NEGATIVES, StatusTag.HAS_PLURALS, StatusTag.SIMPLE_PRESENT]))
+        self.assertEqual(grammatical, expected)
+
 
 
 if __name__ == '__main__':

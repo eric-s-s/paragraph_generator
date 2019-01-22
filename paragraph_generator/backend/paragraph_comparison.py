@@ -1,6 +1,6 @@
 import re
 from collections import namedtuple
-from itertools import zip_longest
+from itertools import zip_longest, tee
 from typing import List
 
 from paragraph_generator.word_groups.paragraph import Paragraph
@@ -19,12 +19,16 @@ class ParagraphComparison(object):
         self.submission = submission_str
 
     def compare_by_sentences(self):
-        submission_sentences = self._get_submission_sentences()
-        answer_sentences = (str(sentence) for sentence in self.answer)
-        error_count = 0
         hint_paragraph = []
-        for answer, submission in zip_longest(answer_sentences, submission_sentences, fillvalue=''):
-            if answer != submission and submission:
+        error_count = 0
+
+        submission_sentences = self._get_submission_sentences()
+        answer_sentences_exclamation = (str(sentence).replace('.', '!') for sentence in self.answer)
+        answer_sentences_period = (str(sentence).replace('!', '.') for sentence in self.answer)
+
+        zipped = zip_longest(answer_sentences_period, answer_sentences_exclamation, submission_sentences, fillvalue='')
+        for periods_answer, exclamations_answer, submission in zipped:
+            if (submission not in (periods_answer, exclamations_answer)) and submission:
                 submission = f'<bold>{submission}</bold>'
                 error_count += 1
             hint_paragraph.append(submission)
@@ -81,7 +85,9 @@ def compare_sentences(sentence, submission_str):
         replace_found_word = '_' * (after - until)
         current_search_str = current_search_str[:until] + replace_found_word + current_search_str[after:]
 
-        if new_word.value != word.value:
+        has_error = _has_error(new_word, word)
+
+        if has_error:
             new_word = new_word.bold()
             error_count += 1
         word_obj = WordObj(index=index, location=location, word=new_word)
@@ -111,6 +117,13 @@ def _get_missing_location(current_sentence):
         end_index = last_location[1]
         location = (end_index, end_index)
     return location
+
+
+def _has_error(new_word, word):
+    if isinstance(new_word, Punctuation):
+        return new_word not in (Punctuation.PERIOD, Punctuation.EXCLAMATION)
+    else:
+        return new_word.value != word.value
 
 
 def get_word_locations(submission_str):

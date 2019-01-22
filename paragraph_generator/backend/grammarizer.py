@@ -3,7 +3,7 @@ from paragraph_generator.tags.wordtag import WordTag
 from paragraph_generator.word_groups.paragraph import Paragraph
 from paragraph_generator.word_groups.sentence import Sentence
 from paragraph_generator.words.noun import Noun
-from paragraph_generator.words.pronoun import Pronoun, CapitalPronoun
+from paragraph_generator.words.pronoun import Pronoun, CapitalPronoun, AbstractPronoun
 
 
 class Grammarizer(object):
@@ -83,11 +83,6 @@ def _needs_third_person(sentence: Sentence):
     subject = sentence.get(subject_index)
 
     first_person = (Pronoun.I, Pronoun.ME, CapitalPronoun.I, CapitalPronoun.ME)
-    if isinstance(subject, (Noun, Pronoun)) and subject not in first_person:
+    if isinstance(subject, (Noun, AbstractPronoun)) and subject not in first_person:
         return not subject.has_tags(WordTag.PLURAL)
     return False
-
-    # third_person_pronouns = (Pronoun.HE, Pronoun.SHE, Pronoun.IT)
-    # if isinstance(subject, Pronoun) and subject not in third_person_pronouns:
-    #     return False
-    # return not subject.has_tags(WordTag.PLURAL)

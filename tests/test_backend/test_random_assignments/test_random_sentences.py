@@ -41,7 +41,7 @@ class TestRawWordsRandomisation(unittest.TestCase):
         for index in range(4):
             self.countable[index] = Noun('oops')
             self.uncountable[index] = Noun('oops')
-            self.verbs[index] = VerbGroup(1, 2, 3, 4)
+            self.verbs[index] = VerbGroup(Verb('a'), BasicWord('b'), BasicWord('c'), 4)
         answer = self.generator.predicate()
         expected = [Verb('lend'), Noun('dog'), BasicWord.preposition('to'), Noun('milk'), PERIOD]
         self.assertEqual(answer, expected)

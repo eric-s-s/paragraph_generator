@@ -44,6 +44,11 @@ class TestAnswerChecker(unittest.TestCase):
         to_test = AnswerChecker(correct_submission, self.test_paragraph)
         self.assertTrue(to_test.is_submission_correct())
 
+    def test_is_sumission_correct_true_period_and_exclamation_are_switched(self):
+        correct_submission = 'I like a squirrel. The squirrel likes me!'
+        to_test = AnswerChecker(correct_submission, self.test_paragraph)
+        self.assertTrue(to_test.is_submission_correct())
+
     def test_is_submission_correct_false(self):
         incorrect_submission = 'i like squirrels? The squirrels like me.'
         to_test = AnswerChecker(incorrect_submission, self.test_paragraph)
@@ -97,3 +102,18 @@ class TestAnswerChecker(unittest.TestCase):
             'missing_sentences': 0,
         }
         self.assertEqual(checker.get_word_hints(), expected)
+
+    def test_all_functions_switching_periods_and_exclamation_points(self):
+        submission = 'I like squirrels. The squirrels like me.'
+        checker = AnswerChecker(submission, self.test_paragraph)
+        expected_hint = {
+            'error_count': 0,
+            'missing_sentences': 0,
+            'hint_paragraph': submission
+        }
+
+        self.assertEqual(checker.is_submission_correct(), True)
+        self.assertEqual(checker.count_word_errors(), 0)
+        self.assertEqual(checker.count_sentence_errors(), 0)
+        self.assertEqual(checker.get_sentence_hints(), expected_hint)
+        self.assertEqual(checker.get_word_hints(), expected_hint)
