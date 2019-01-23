@@ -73,7 +73,8 @@ class TestGrammarizer(unittest.TestCase):
     def test_grammarize_to_present_or_past_tense_does_not_alter_proper_nouns_or_uncountable_nouns(self):
         word_list = [Noun.proper_noun('A', plural=True),
                      Noun.proper_noun('B', plural=False),
-                     Noun.uncountable_noun('d')]
+                     Noun.uncountable_noun('d'),
+                     Noun.uncountable_noun('e').definite()]
         sentence_list = [Sentence(word_list) for _ in range(3)]
         raw_paragraph = Paragraph(sentence_list)
 

@@ -70,7 +70,7 @@ class TestParagraphsGenerator(unittest.TestCase):
             VerbGroup(Verb('eat'), None, None, 1)
         ]
         self.countable_nouns = [Noun('dog'), Noun('cat')]
-        self.uncountable_nouns = [Noun.uncountable_noun('water'), Noun.uncountable_noun('air')]
+        self.uncountable_nouns = [Noun.uncountable_noun('water'), Noun.uncountable_noun('air').definite()]
         self.static_nouns = [Noun.proper_noun('Joe'), Noun.proper_noun('The Dude')]
         self.word_lists = DummyWordLists(nouns=self.countable_nouns, verbs=self.verbs)
 

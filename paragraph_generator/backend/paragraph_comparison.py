@@ -1,6 +1,6 @@
 import re
 from collections import namedtuple
-from itertools import zip_longest, tee
+from itertools import zip_longest
 from typing import List
 
 from paragraph_generator.word_groups.paragraph import Paragraph

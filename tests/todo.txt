@@ -1,6 +1,0 @@
-large errors.
-
-1 - DONE error checker doesn't allow a comma to be changed to a period
-2 - DONE he go registers as correct. while he goes registers incorrect = checker problem
-3 - DONE create way to assign uncountables as definite or indefinite, random or word list - WORD LIST
-4 - update docs and versioning
