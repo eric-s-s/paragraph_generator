@@ -184,6 +184,5 @@ class TestGrammarizer(unittest.TestCase):
         self.assertEqual(grammatical, expected)
 
 
-
 if __name__ == '__main__':
     unittest.main()

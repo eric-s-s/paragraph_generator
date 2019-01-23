@@ -4,11 +4,13 @@ import unittest
 from paragraph_generator.paragraphsgenerator import ParagraphsGenerator
 from paragraph_generator.tags.status_tag import StatusTag
 from paragraph_generator.tags.wordtag import WordTag
+from paragraph_generator.word_groups.sentence import Sentence
 from paragraph_generator.word_groups.verb_group import VerbGroup
 from paragraph_generator.word_lists import AbstractWordLists
 from paragraph_generator.words.basicword import BasicWord
 from paragraph_generator.words.noun import Noun
 from paragraph_generator.words.pronoun import AbstractPronoun
+from paragraph_generator.words.punctuation import Punctuation
 from paragraph_generator.words.verb import Verb
 
 
@@ -320,3 +322,16 @@ class TestParagraphsGenerator(unittest.TestCase):
 
         answer, error = ParagraphsGenerator(config, self.word_lists).generate_paragraphs()
         self.assert_only_error_has_one_error_tag(answer, error, StatusTag.PUNCTUATION_ERRORS)
+
+    def test_retains_definite_assigned_to_uncountable_nouns(self):
+        random.seed(33784)
+        config = {'error_probability': 0.0, 'probability_pronoun': 0.0, 'paragraph_size': 1}
+        verb_groups = [VerbGroup(Verb('play'), None, None, 1)]
+        nouns = [Noun.uncountable_noun('water').definite()]
+        word_lists = DummyWordLists(nouns, verb_groups)
+        answer, error = ParagraphsGenerator(config, word_lists).generate_paragraphs()
+        expected_sentences = [
+            Sentence([Noun.uncountable_noun('water').definite().capitalize(), Verb('play').third_person(),
+                      Noun.uncountable_noun('water').definite(), Punctuation.PERIOD])
+        ]
+        self.assertEqual(expected_sentences, answer.sentence_list())

@@ -19,9 +19,10 @@ class TestPluralsAssignment(unittest.TestCase):
         self.assertEqual(pa.raw.sentence_list(), sentences)
         self.assertEqual(pa.raw.tags, tags)
 
-    def test_init_reverts_nouns_and_removes_tag(self):
+    def test_init_reverts_countable_nouns_and_removes_tag(self):
         original_sentences = [Sentence([Noun('x').plural(), Noun('y'),
-                                        Noun.uncountable_noun('z'), Noun.proper_noun('A', plural=True)])]
+                                        Noun.uncountable_noun('z'), Noun.proper_noun('A', plural=True),
+                                        Noun.uncountable_noun('q').definite()])]
         original_tags = Tags([StatusTag.HAS_PLURALS, StatusTag.RAW])
         original_paragraph = Paragraph(original_sentences, original_tags)
         pa = PluralsAssignment(original_paragraph)
@@ -29,7 +30,8 @@ class TestPluralsAssignment(unittest.TestCase):
         self.assertEqual(original_paragraph.sentence_list(), original_sentences)
         self.assertEqual(original_paragraph.tags, original_tags)
 
-        expected = [Sentence([Noun('x'), Noun('y'), Noun.uncountable_noun('z'), Noun.proper_noun('A', plural=True)])]
+        expected = [Sentence([Noun('x'), Noun('y'), Noun.uncountable_noun('z'), Noun.proper_noun('A', plural=True),
+                              Noun.uncountable_noun('q').definite()])]
         self.assertEqual(pa.raw.sentence_list(), expected)
         self.assertEqual(pa.raw.tags, Tags([StatusTag.RAW]))
 

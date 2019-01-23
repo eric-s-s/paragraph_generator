@@ -10,11 +10,11 @@ from paragraph_generator.words.wordtools.abstractword import AbstractWord
 class PluralsAssignment(object):
     def __init__(self, raw_paragraph: Paragraph):
         self._raw = raw_paragraph
-        self._revert_nouns_and_tags()
+        self._revert_countable_nouns_and_tags()
 
-    def _revert_nouns_and_tags(self):
+    def _revert_countable_nouns_and_tags(self):
         for s_index, w_index, word in self._raw.indexed_all_words():
-            if isinstance(word, Noun):
+            if is_countable_noun(word):
                 self._raw = self._raw.set(s_index, w_index, word.to_basic_noun())  # type: Paragraph
         self._raw = self._raw.set_tags(self._raw.tags.remove(StatusTag.HAS_PLURALS))
 
