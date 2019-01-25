@@ -1,9 +1,9 @@
-from enum import Enum
 from abc import ABCMeta
+from enum import Enum
 
-from paragraph_generator.words.wordtools.abstractword import AbstractWord
-from paragraph_generator.words.basicword import BasicWord
 from paragraph_generator.tags.wordtag import WordTag
+from paragraph_generator.words.basicword import BasicWord
+from paragraph_generator.words.wordtools.abstractword import AbstractWord
 
 
 class AbstractPronoun(Enum):

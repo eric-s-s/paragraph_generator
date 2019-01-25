@@ -1,8 +1,8 @@
 import unittest
 
-from paragraph_generator.words.wordtools.abstractword import AbstractWord
-from paragraph_generator.tags.wordtag import WordTag
 from paragraph_generator.tags.tags import Tags
+from paragraph_generator.tags.wordtag import WordTag
+from paragraph_generator.words.wordtools.abstractword import AbstractWord
 
 
 class DummyWord(AbstractWord):
@@ -31,6 +31,33 @@ class DummyWord(AbstractWord):
 
 
 class TestAbstractWord(unittest.TestCase):
+
+    def test_methods_raise_not_implemented_error(self):
+        class TestWord(AbstractWord):
+            @property
+            def value(self):
+                return super(TestWord, self).value
+
+            @property
+            def tags(self):
+                return super(TestWord, self).tags
+
+            def capitalize(self):
+                return super(TestWord, self).capitalize()
+
+            def de_capitalize(self):
+                return super(TestWord, self).de_capitalize()
+
+            def bold(self):
+                return super(TestWord, self).bold()
+
+        test = TestWord()
+        self.assertRaises(NotImplementedError, getattr, test, 'value')
+        self.assertRaises(NotImplementedError, getattr, test, 'tags')
+        self.assertRaises(NotImplementedError, test.capitalize)
+        self.assertRaises(NotImplementedError, test.de_capitalize)
+        self.assertRaises(NotImplementedError, test.bold)
+
     def test_value(self):
         test = DummyWord('x')
         self.assertEqual(test.value, 'x')

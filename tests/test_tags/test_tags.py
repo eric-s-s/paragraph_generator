@@ -1,6 +1,5 @@
-import unittest
-
 import random
+import unittest
 
 from paragraph_generator.tags.tags import Tags
 from paragraph_generator.tags.wordtag import WordTag

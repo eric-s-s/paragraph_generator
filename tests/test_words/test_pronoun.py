@@ -1,9 +1,9 @@
 import unittest
 
-from paragraph_generator.words.wordtools.abstractword import AbstractWord
-from paragraph_generator.words.pronoun import Pronoun, CapitalPronoun, AbstractPronoun
-from paragraph_generator.words.basicword import BasicWord
 from paragraph_generator.tags.wordtag import WordTag
+from paragraph_generator.words.basicword import BasicWord
+from paragraph_generator.words.pronoun import Pronoun, CapitalPronoun, AbstractPronoun
+from paragraph_generator.words.wordtools.abstractword import AbstractWord
 
 
 class DummyPronoun(AbstractPronoun):
@@ -40,6 +40,19 @@ class TestAbstractPronoun(unittest.TestCase):
         cls.pronoun = DummyPronoun
         cls.names = ['I', 'ME', 'YOU', 'HE', 'HIM', 'SHE', 'HER', 'IT', 'WE', 'US', 'THEY', 'THEM']
         cls.values = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l']
+
+    def test_capitalize_and_de_capitalize_must_be_assigned(self):
+        class TestClass(AbstractPronoun):
+            X = 'x'
+
+            def capitalize(self):
+                return super(TestClass, self).capitalize()
+
+            def de_capitalize(self):
+                return super(TestClass, self).de_capitalize()
+
+        self.assertRaises(NotImplementedError, TestClass.X.capitalize)
+        self.assertRaises(NotImplementedError, TestClass.X.de_capitalize)
 
     def test_register_as_subclass_of_AbstractWord(self):
         self.assertTrue(isinstance(self.pronoun.I, AbstractWord))

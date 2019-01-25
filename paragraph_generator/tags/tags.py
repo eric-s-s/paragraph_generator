@@ -7,7 +7,7 @@ Tag = Union[StatusTag, WordTag]
 
 
 class Tags(object):
-    def __init__(self, tag_list: List[Optional[Tag]]=None):
+    def __init__(self, tag_list: List[Optional[Tag]] = None):
         self._tags = set()
         if tag_list:
             self._tags = set(tag_list)

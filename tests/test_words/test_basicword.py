@@ -1,8 +1,8 @@
 import unittest
 
-from paragraph_generator.words.basicword import BasicWord
 from paragraph_generator.tags.tags import Tags
 from paragraph_generator.tags.wordtag import WordTag
+from paragraph_generator.words.basicword import BasicWord
 
 
 class TestBasicWord(unittest.TestCase):

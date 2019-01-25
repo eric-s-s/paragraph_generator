@@ -1,10 +1,10 @@
 import string
 import unittest
 
-from paragraph_generator.words.noun import Noun, get_plural_value, get_article
-from paragraph_generator.words.basicword import BasicWord
-from paragraph_generator.tags.wordtag import WordTag
 from paragraph_generator.tags.tags import Tags
+from paragraph_generator.tags.wordtag import WordTag
+from paragraph_generator.words.basicword import BasicWord
+from paragraph_generator.words.noun import Noun, get_plural_value, get_article
 
 
 class TestNoun(unittest.TestCase):
@@ -333,7 +333,7 @@ class TestNoun(unittest.TestCase):
         noun = Noun('water', tags=Tags([WordTag.UNCOUNTABLE]))
         self.assertEqual(noun.plural(), Noun('waters', '', 'water', tags=self.plural))
 
-        definite = Noun('the water', '',  'water', tags=self.definite_uncountable)
+        definite = Noun('the water', '', 'water', tags=self.definite_uncountable)
         self.assertEqual(definite.plural(), Noun('the waters', '', 'water', tags=self.definite_plural))
 
     def test_plural_does_not_change_a_plural_noun(self):

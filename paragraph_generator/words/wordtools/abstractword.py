@@ -1,5 +1,5 @@
-
 from abc import ABC, abstractmethod
+
 from paragraph_generator.tags.tags import Tags
 from paragraph_generator.tags.wordtag import WordTag
 
@@ -9,24 +9,24 @@ class AbstractWord(ABC):
     @property
     @abstractmethod
     def value(self) -> str:
-        pass
+        raise NotImplementedError
 
     @property
     @abstractmethod
     def tags(self) -> Tags:
-        pass
+        raise NotImplementedError
 
     @abstractmethod
     def capitalize(self) -> 'AbstractWord':
-        pass
+        raise NotImplementedError
 
     @abstractmethod
     def de_capitalize(self) -> 'AbstractWord':
-        pass
+        raise NotImplementedError
 
     @abstractmethod
     def bold(self) -> 'AbstractWord':
-        pass
+        raise NotImplementedError
 
     def has_tags(self, *tags: WordTag) -> bool:
         owned_tags = self.tags

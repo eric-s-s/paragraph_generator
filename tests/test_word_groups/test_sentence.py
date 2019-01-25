@@ -1,11 +1,10 @@
 import unittest
 
 from paragraph_generator.word_groups.sentence import Sentence
-
 from paragraph_generator.words.basicword import BasicWord
-from paragraph_generator.words.verb import Verb
 from paragraph_generator.words.be_verb import BeVerb
 from paragraph_generator.words.punctuation import Punctuation
+from paragraph_generator.words.verb import Verb
 
 
 class TestSentence(unittest.TestCase):

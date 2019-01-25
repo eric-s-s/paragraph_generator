@@ -335,3 +335,16 @@ class TestParagraphsGenerator(unittest.TestCase):
                       Noun.uncountable_noun('water').definite(), Punctuation.PERIOD])
         ]
         self.assertEqual(expected_sentences, answer.sentence_list())
+
+    def test_retains_no_definite_assigned_to_uncountable_nouns(self):
+        random.seed(33784)
+        config = {'error_probability': 0.0, 'probability_pronoun': 0.0, 'paragraph_size': 1}
+        verb_groups = [VerbGroup(Verb('play'), None, None, 1)]
+        nouns = [Noun.uncountable_noun('water')]
+        word_lists = DummyWordLists(nouns, verb_groups)
+        answer, error = ParagraphsGenerator(config, word_lists).generate_paragraphs()
+        expected_sentences = [
+            Sentence([Noun.uncountable_noun('water').capitalize(), Verb('play').third_person(),
+                      Noun.uncountable_noun('water'), Punctuation.PERIOD])
+        ]
+        self.assertEqual(expected_sentences, answer.sentence_list())

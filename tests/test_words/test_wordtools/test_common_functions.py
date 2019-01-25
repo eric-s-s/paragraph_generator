@@ -1,6 +1,7 @@
 import unittest
 
-from paragraph_generator.words.wordtools.common_functions import (bold, add_s, add_ed, needs_es, is_y_as_long_vowel_sound,
+from paragraph_generator.words.wordtools.common_functions import (bold, add_s, add_ed, needs_es,
+                                                                  is_y_as_long_vowel_sound,
                                                                   ends_with_short_vowel_and_consonant)
 
 
@@ -96,7 +97,7 @@ class TestCommonFunctions(unittest.TestCase):
 
     def test_bold_full_tag(self):
         self.assertEqual(bold('<bold>x</bold>'), '<bold>x</bold>')
-        
+
     def test_add_s_needs_es(self):
         es_words = ('buzz', 'fitch', 'fess', 'ax', 'dish', 'bobo')
         for word in es_words:
@@ -113,7 +114,7 @@ class TestCommonFunctions(unittest.TestCase):
         self.assertEqual(add_s('play'), 'plays')
         self.assertEqual(add_s('baa'), 'baas')
         self.assertEqual(add_s('egg'), 'eggs')
-        
+
     def test_add_ed_doubles_consonant(self):
         self.assertEqual(add_ed('pit'), 'pitted')
 
@@ -129,5 +130,3 @@ class TestCommonFunctions(unittest.TestCase):
 
     def test_add_ed_does_not_duplicate_d(self):
         self.assertEqual(add_ed('like'), 'liked')
-
-

@@ -7,6 +7,22 @@ from paragraph_generator.words.noun import Noun
 from paragraph_generator.words.verb import Verb
 
 
+class TestAbstractWordLists(unittest.TestCase):
+    def test_methods_raise_not_implemented_error(self):
+        class TestClass(AbstractWordLists):
+            @property
+            def nouns(self):
+                return super(TestClass, self).nouns
+
+            @property
+            def verbs(self):
+                return super(TestClass, self).verbs
+
+        test = TestClass()
+        self.assertRaises(NotImplementedError, getattr, test, 'nouns')
+        self.assertRaises(NotImplementedError, getattr, test, 'verbs')
+
+
 class TestWordLists(unittest.TestCase):
     def assert_unordered_lists(self, first, second):
         for el in first:

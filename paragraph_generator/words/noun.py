@@ -1,7 +1,7 @@
+from paragraph_generator.tags.tags import Tags
+from paragraph_generator.tags.wordtag import WordTag
 from paragraph_generator.words.wordtools.abstractword import AbstractWord
 from paragraph_generator.words.wordtools.common_functions import add_s, bold
-from paragraph_generator.tags.wordtag import WordTag
-from paragraph_generator.tags.tags import Tags
 
 
 class Noun(AbstractWord):

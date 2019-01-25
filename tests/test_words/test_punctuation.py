@@ -1,9 +1,8 @@
 import unittest
 
-from paragraph_generator.words.wordtools.abstractword import AbstractWord
-from paragraph_generator.words.punctuation import Punctuation
-from paragraph_generator.words.basicword import BasicWord
 from paragraph_generator.tags.wordtag import WordTag
+from paragraph_generator.words.punctuation import Punctuation
+from paragraph_generator.words.wordtools.abstractword import AbstractWord
 
 
 class TestPunctuation(unittest.TestCase):
