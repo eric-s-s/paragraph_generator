@@ -96,7 +96,7 @@ Basic Documentation:
             config_state optional keys:
     
             - 'error_probability': 0.0 <= float <= 1.0
-            - 'noun_errors': 0.0 <= float <= 1.0
+            - 'noun_errors': bool 
             - 'pronoun_errors': bool
             - 'verb_errors': bool
             - 'is_do_errors': bool
