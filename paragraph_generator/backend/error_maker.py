@@ -1,4 +1,5 @@
 import random
+from typing import Optional
 
 from paragraph_generator.tags.status_tag import StatusTag
 from paragraph_generator.tags.wordtag import WordTag
@@ -14,12 +15,12 @@ from paragraph_generator.words.wordtools.common_functions import add_s
 class ErrorMaker(object):
     def __init__(self, paragraph: Paragraph):
         self._paragraph = paragraph
-        self._error_paragraph = None  # type: Paragraph
+        self._error_paragraph = None  # type: Optional[Paragraph]
 
-    def get_paragraph(self):
+    def get_paragraph(self) -> Paragraph:
         return self._paragraph
 
-    def noun_errors(self, p_error):
+    def noun_errors(self, p_error) -> 'ErrorMaker':
         self._error_paragraph = self._paragraph
         self._set_error_tag(StatusTag.NOUN_ERRORS)
 
@@ -30,7 +31,7 @@ class ErrorMaker(object):
         self._recapitalize_first_word_if_original_capitalized()
         return ErrorMaker(self._error_paragraph)
 
-    def pronoun_errors(self, p_error):
+    def pronoun_errors(self, p_error) -> 'ErrorMaker':
         self._error_paragraph = self._paragraph
         self._set_error_tag(StatusTag.PRONOUN_ERRORS)
 
@@ -45,7 +46,7 @@ class ErrorMaker(object):
 
         return ErrorMaker(self._error_paragraph)
 
-    def verb_errors(self, p_error):
+    def verb_errors(self, p_error) -> 'ErrorMaker':
         self._error_paragraph = self._paragraph
         self._set_error_tag(StatusTag.VERB_ERRORS)
 
@@ -57,7 +58,7 @@ class ErrorMaker(object):
         self._recapitalize_first_word_if_original_capitalized()
         return ErrorMaker(self._error_paragraph)
 
-    def is_do_errors(self, p_error):
+    def is_do_errors(self, p_error) -> 'ErrorMaker':
         self._error_paragraph = self._paragraph
         self._set_error_tag(StatusTag.IS_DO_ERRORS)
         for s_index, sentence in enumerate(self._error_paragraph):
@@ -73,7 +74,7 @@ class ErrorMaker(object):
                 self._error_paragraph = self._error_paragraph.set_sentence(s_index, new_sentence)
         return ErrorMaker(self._error_paragraph)
 
-    def preposition_errors(self, p_error):
+    def preposition_errors(self, p_error) -> 'ErrorMaker':
         self._error_paragraph = self._paragraph
         self._set_error_tag(StatusTag.PREPOSITION_ERRORS)
         for s_index, w_index, word in self._error_paragraph.indexed_all_words():
@@ -87,7 +88,7 @@ class ErrorMaker(object):
 
         return ErrorMaker(self._error_paragraph)
 
-    def punctuation_errors(self, p_error):
+    def punctuation_errors(self, p_error) -> 'ErrorMaker':
         self._error_paragraph = self._paragraph
         self._set_error_tag(StatusTag.PUNCTUATION_ERRORS)
         for s_index, sentence in enumerate(self._error_paragraph):

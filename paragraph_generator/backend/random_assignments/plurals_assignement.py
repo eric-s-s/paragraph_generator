@@ -1,4 +1,5 @@
 import random
+from typing import List
 
 from paragraph_generator.tags.status_tag import StatusTag
 from paragraph_generator.tags.wordtag import WordTag
@@ -19,7 +20,7 @@ class PluralsAssignment(object):
         self._raw = self._raw.set_tags(self._raw.tags.remove(StatusTag.HAS_PLURALS))
 
     @property
-    def raw(self):
+    def raw(self) -> Paragraph:
         return self._raw
 
     def assign_plural(self, to_plural) -> Paragraph:
@@ -29,13 +30,13 @@ class PluralsAssignment(object):
                 new_paragraph = new_paragraph.set(s_index, w_index, noun.plural())
         return new_paragraph.set_tags(self.raw.tags.add(StatusTag.HAS_PLURALS))
 
-    def assign_random_plurals(self, p_plural):
+    def assign_random_plurals(self, p_plural) -> Paragraph:
         to_plural = [noun for noun in get_countable_nouns(self.raw) if random.random() < p_plural]
 
         return self.assign_plural(to_plural)
 
 
-def get_countable_nouns(paragraph):
+def get_countable_nouns(paragraph: Paragraph) -> List[Noun]:
     out = []  # Sets are untestable with random.seed
     for word in paragraph.all_words():  # type: Noun
         if is_countable_noun(word):

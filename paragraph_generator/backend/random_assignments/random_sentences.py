@@ -3,18 +3,20 @@ from typing import List
 
 from paragraph_generator.tags.wordtag import WordTag
 from paragraph_generator.word_groups.sentence import Sentence
+from paragraph_generator.word_groups.verb_group import VerbGroup
+from paragraph_generator.words.noun import Noun
 from paragraph_generator.words.pronoun import Pronoun
 from paragraph_generator.words.punctuation import Punctuation
 from paragraph_generator.words.wordtools.abstractword import AbstractWord
 
 
 class RandomSentences(object):
-    def __init__(self, verb_list, noun_list):
+    def __init__(self, verb_list: List[VerbGroup], noun_list: List[Noun]):
         self._pronouns = list(Pronoun.__members__.values())
         self._endings = [Punctuation.PERIOD, Punctuation.PERIOD, Punctuation.EXCLAMATION]
 
-        self._verbs = verb_list[:]
-        self._nouns = noun_list[:]
+        self._verbs = verb_list[:]  # type: List[VerbGroup]
+        self._nouns = noun_list[:]  # type: List[Noun]
         self._check_empty_lists()
 
     def _check_empty_lists(self):
@@ -23,7 +25,7 @@ class RandomSentences(object):
         if not self._nouns:
             raise ValueError('There are no nouns in any of the nouns lists.')
 
-    def sentence(self, subject, p_pronoun=0.2):
+    def sentence(self, subject: AbstractWord, p_pronoun=0.2):
         p_pronoun = min(max(p_pronoun, 0), 1)
         to_test = subject
         if isinstance(subject, Pronoun):
@@ -79,7 +81,7 @@ class RandomSentences(object):
             return random.choice(self._nouns)
 
 
-def assign_objects(verb_group, objects):
+def assign_objects(verb_group: VerbGroup, objects: List[AbstractWord]):
     preposition = [verb_group.preposition]
     separable_particle = [verb_group.particle]
     predicate = [verb_group.verb]  # type: List[AbstractWord]

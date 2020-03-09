@@ -1,7 +1,7 @@
 import re
 from collections import namedtuple
 from itertools import zip_longest
-from typing import List
+from typing import List, Tuple, Optional, Union
 
 from paragraph_generator.word_groups.paragraph import Paragraph
 from paragraph_generator.word_groups.sentence import Sentence
@@ -64,7 +64,7 @@ class ParagraphComparison(object):
 WordObj = namedtuple('WordObj', ['index', 'location', 'word'])
 
 
-def compare_sentences(sentence, submission_str):
+def compare_sentences(sentence: Sentence, submission_str: str) -> dict:
     new_sentence = []
     error_count = 0
     extra_locations = get_word_locations(submission_str)
@@ -126,11 +126,11 @@ def _has_error(new_word, word):
         return new_word.value != word.value
 
 
-def get_word_locations(submission_str):
+def get_word_locations(submission_str: str) -> List[Tuple[int, int]]:
     return [match.span() for match in re.compile(r"([a-zA-Z']+|[.,?!])").finditer(submission_str)]
 
 
-def filter_locations(all_locations, to_remove):
+def filter_locations(all_locations: List[Tuple[int, int]], to_remove: Tuple[int, int]):
     low, high = to_remove
     return [location for location in all_locations if location[0] >= high or location[1] <= low]
 
@@ -159,16 +159,16 @@ def _check_for_out_of_order_words(obj_list: List[WordObj]):
     return word_list, extra_errors
 
 
-def get_word(submission_str, word):
+def get_word(submission_str: str, word: AbstractWord) -> Tuple[AbstractWord, Optional[Tuple[int, int]]]:
     location = find_word_group(word, submission_str)
     if location is None:
         return BasicWord('MISSING'), None
-    substr = submission_str[slice(*location)]
-    new_word = BasicWord(substr)
+    sub_str = submission_str[slice(*location)]
+    new_word = BasicWord(sub_str)
     return new_word, location
 
 
-def get_punctuation(submission_str):
+def get_punctuation(submission_str: str) -> Tuple[Union[AbstractWord, Punctuation], Optional[Tuple[int, int]]]:
     punctuations = {
         '.': Punctuation.PERIOD,
         ',': Punctuation.COMMA,
@@ -183,7 +183,7 @@ def get_punctuation(submission_str):
         return BasicWord("MISSING"), None
 
 
-def find_word_group(word, submission_str):
+def find_word_group(word, submission_str) -> Optional[Tuple[int, int]]:
     if isinstance(word, Noun):
         return find_noun_group(word, submission_str)
     elif isinstance(word, Verb):

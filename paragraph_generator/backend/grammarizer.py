@@ -1,3 +1,5 @@
+from typing import Optional
+
 from paragraph_generator.tags.status_tag import StatusTag
 from paragraph_generator.tags.wordtag import WordTag
 from paragraph_generator.word_groups.paragraph import Paragraph
@@ -9,20 +11,20 @@ from paragraph_generator.words.pronoun import Pronoun, CapitalPronoun, AbstractP
 class Grammarizer(object):
     def __init__(self, raw_paragraph: Paragraph):
         self._raw = raw_paragraph
-        self._altered = None  # type: Paragraph
+        self._altered = None  # type: Optional[Paragraph]
 
     @property
-    def raw(self):
+    def raw(self) -> Paragraph:
         return self._raw
 
-    def grammarize_to_present_tense(self):
+    def grammarize_to_present_tense(self) -> Paragraph:
         self._altered = self._raw
         self._assign_noun_articles()
         self._assign_present_tense_verbs()
         self._capitalize_first_letter_of_sentences()
         return self._set_tags(StatusTag.SIMPLE_PRESENT)
 
-    def grammarize_to_past_tense(self):
+    def grammarize_to_past_tense(self) -> Paragraph:
         self._altered = self._raw
         self._assign_noun_articles()
         self._assign_past_tense_verbs()

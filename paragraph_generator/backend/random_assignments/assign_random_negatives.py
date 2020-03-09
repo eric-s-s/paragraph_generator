@@ -5,7 +5,7 @@ from paragraph_generator.word_groups.paragraph import Paragraph
 from paragraph_generator.words.verb import Verb
 
 
-def assign_random_negatives(paragraph: Paragraph, p_negative):
+def assign_random_negatives(paragraph: Paragraph, p_negative) -> Paragraph:
     out = paragraph
     for s_index, w_index, word in paragraph.indexed_all_words():
         if isinstance(word, Verb) and random.random() < p_negative:
